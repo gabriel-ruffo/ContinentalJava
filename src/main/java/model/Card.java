@@ -2,12 +2,16 @@ package model;
 
 public class Card {
 
-    private Suit suit;
-    private int rank;
+    private final Suit suit;
+    private final int rank;
 
     public Card(Suit suit, int rank) {
         this.suit = suit;
         this.rank = rank;
+    }
+
+    public boolean validate() {
+        return rank >= -1 && rank <= 13;
     }
 
     public Suit getSuit() {
@@ -18,8 +22,42 @@ public class Card {
         return rank;
     }
 
+    public int getPoints() {
+        if (rank == -1) {
+            return 50;
+        } else if (isBetween(rank, 2, 7)) {
+            return 5;
+        } else if (isBetween(rank, 8, 13)) {
+            return 10;
+        } else {
+            return 20;
+        }
+    }
+
+    private boolean isBetween(int num, int low, int high) {
+        return low <= num && num <= high;
+    }
+
     @Override
     public String toString() {
-        return rank == -1 ? "JOKER" : rank + " of " + suit + "S";
+        StringBuilder stringBuilder = new StringBuilder();
+        if (rank == 1) {
+            stringBuilder.append("ACE");
+        } else if (rank == 11) {
+            stringBuilder.append("JACK");
+        } else if (rank == 12) {
+            stringBuilder.append("QUEEN");
+        } else if (rank == 13) {
+            stringBuilder.append("KING");
+        } else if (rank == -1) {
+            stringBuilder.append("JOKER");
+            return stringBuilder.toString();
+        } else {
+            stringBuilder.append(rank);
+        }
+
+        stringBuilder.append(" of ").append(suit).append("S");
+
+        return stringBuilder.toString();
     }
 }
