@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Hand {
 
@@ -30,6 +31,14 @@ public class Hand {
             }
         }
         return false;
+    }
+
+    public void sortHand() {
+        hand.sort(Comparator.comparing(Card::getRank));
+    }
+
+    public int getPoints() {
+       return hand.stream().map(Card::getPoints).reduce(0, Integer::sum);
     }
 
     public ArrayList<Card> getHand() {
