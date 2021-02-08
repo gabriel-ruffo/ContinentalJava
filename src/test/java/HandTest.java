@@ -75,4 +75,39 @@ public class HandTest {
         assertEquals(hand.getHand().get(5).getRank(), 12);
         assertEquals(hand.getPoints(), 100);
     }
+
+    @Test
+    public void testHand_GetCardCountByRank() {
+        ArrayList<Card> cards = new ArrayList<>();
+        Collections.addAll(cards,
+                new Card(Suit.HEART, 1),
+                new Card(Suit.HEART, 1),
+                new Card(Suit.CLUB, 1),
+                new Card(Suit.DIAMOND, 2),
+                new Card(Suit.SPADE, 2),
+                new Card(Suit.CLUB, 3));
+        Hand hand = new Hand(cards);
+
+        assertEquals(3, hand.getCardCountByRank(new Card(Suit.HEART, 1)));
+        assertEquals(2, hand.getCardCountByRank(new Card(Suit.DIAMOND, 2)));
+        assertEquals(1, hand.getCardCountByRank(new Card(Suit.CLUB, 3)));
+        assertEquals(0, hand.getCardCountByRank(new Card(Suit.SPADE, 4)));
+    }
+
+    @Test
+    public void testHand_GetCardCountBySuit() {
+        ArrayList<Card> cards = new ArrayList<>();
+        Collections.addAll(cards,
+                new Card(Suit.HEART, 1),
+                new Card(Suit.HEART, 1),
+                new Card(Suit.CLUB, 1),
+                new Card(Suit.DIAMOND, 2),
+                new Card(Suit.CLUB, 3));
+        Hand hand = new Hand(cards);
+
+        assertEquals(2, hand.getCardCountBySuit(new Card(Suit.HEART, 0)));
+        assertEquals(1, hand.getCardCountBySuit(new Card(Suit.DIAMOND, 0)));
+        assertEquals(2, hand.getCardCountBySuit(new Card(Suit.CLUB, 0)));
+        assertEquals(0, hand.getCardCountBySuit(new Card(Suit.SPADE, 0)));
+    }
 }

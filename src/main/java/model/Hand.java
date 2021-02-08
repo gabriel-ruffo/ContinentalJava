@@ -44,4 +44,12 @@ public class Hand {
     public ArrayList<Card> getHand() {
         return hand;
     }
+
+    public int getCardCountByRank(Card card) {
+        return (int) hand.stream().filter(predicateCard -> predicateCard.getRank() == card.getRank()).count();
+    }
+
+    public int getCardCountBySuit(Card card) {
+        return (int) hand.stream().filter(predicateCard -> predicateCard.getSuit() == card.getSuit()).count();
+    }
 }
