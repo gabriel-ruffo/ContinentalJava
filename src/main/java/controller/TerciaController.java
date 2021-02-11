@@ -6,7 +6,15 @@ import model.Suit;
 
 public class TerciaController {
 
+    /*
+    Rules:
+        if have 6 of same card, be allowed to split it
+     */
     public static boolean checkForTercias(Hand hand, int terciaCount) {
+        if (terciaCount == 0) {
+            return true;
+        }
+
         hand.sortHand();
         int lastSeenRank = 0;
 
@@ -15,6 +23,7 @@ public class TerciaController {
             if (canSkipCard(lastSeenRank, card)) {
                 continue;
             } else {
+                // check for perfect matches first
                 terciaCount = checkForPerfectMatch(hand, card, terciaCount);
                 if (terciaCount == 0) {
                     return true;
@@ -31,6 +40,7 @@ public class TerciaController {
         return terciaCount == 0;
     }
 
+    // a perfect match is 3 or more of the same card
     private static int checkForPerfectMatch(Hand hand, Card currentCard, int terciaCount) {
         if (hand.getCardCountByRank(currentCard) >= 3) {
             terciaCount--;
@@ -38,12 +48,13 @@ public class TerciaController {
         return terciaCount;
     }
 
+    // a joker match is a pair with a joker
     private static int checkForJokerMatches(Hand hand, int terciaCount) {
         int jokerCount = hand.getCardCountBySuit(new Card(Suit.JOKER, -1));
         int lastSeenRank = 0;
 
         for (Card card : hand.getHand()) {
-            if (card.getRank() == lastSeenRank || card.getSuit() == Suit.JOKER) {
+            if (canSkipCard(lastSeenRank, card)) {
                 continue;
             } else {
                 int cardsOfRankCount = hand.getCardCountByRank(card);
@@ -57,6 +68,7 @@ public class TerciaController {
         return terciaCount;
     }
 
+    // if have already seen given card or looking at joker return true
     private static boolean canSkipCard(int lastSeenRank, Card card) {
         return card.getRank() == lastSeenRank || card.getSuit() == Suit.JOKER;
     }

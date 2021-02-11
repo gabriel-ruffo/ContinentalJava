@@ -1,8 +1,6 @@
 package controller;
 
-import model.Card;
 import model.Hand;
-import model.Suit;
 
 public class GameController {
     /*
@@ -10,7 +8,6 @@ public class GameController {
         1. Can't have a Tercia with more than one Joker
         2. Can't have a run with two Jokers next to each other
         3. Can't discard a Joker
-    TODO: Maybe make a Tercia checker class to take it out of GameController?
      */
     public boolean checkHandForWinCondition(Hand hand, int round) {
         switch (round) {
@@ -19,7 +16,7 @@ public class GameController {
             case 7:
 //                return checkForTerciaRun(hand);
             case 8:
-//                return checkForTwoRuns(hand);
+                return RunController.checkForRuns(hand, 2);
             case 9:
                 return TerciaController.checkForTercias(hand, 3);
             case 10:
