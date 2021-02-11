@@ -15,13 +15,19 @@ public class RunController {
         jack to Ace
         one long run
         jokers
+        split 8 count or larger run into two in necessary
      */
     public static boolean checkForRuns(Hand hand, int runCount) {
+        int jokerCount = hand.getCardCountBySuit(new Card(Suit.JOKER, -1));
         hand.sortHand();
         List<Suit> suits = getDistinctSuits(hand);
+
         for (Suit suit : suits) {
+            if (suit == Suit.JOKER) {
+                continue;
+            }
             List<Card> cards = getCardsBySuit(hand, suit);
-            runCount = findPerfectMatch(cards, runCount);
+            runCount = findPerfectMatch(cards, runCount, jokerCount);
 
             if (runCount == 0) {
                 return true;
@@ -39,15 +45,27 @@ public class RunController {
         return hand.getHand().stream().filter(card -> card.getSuit() == suit).collect(Collectors.toList());
     }
 
-    private static int findPerfectMatch(List<Card> cards, int runCount) {
+    private static int findPerfectMatch(List<Card> cards, int runCount, int jokerCount) {
         int cardRankPointer = cards.get(0).getRank();
         int runBuildCount = 1;
 
         for (Card card : cards) {
-            if (card.getRank() == cardRankPointer + 1) {
+            int cardDiff = card.getRank() - cardRankPointer;
+
+            if (cardDiff == 1) {
                 runBuildCount++;
                 cardRankPointer = card.getRank();
+            } else if ((cardDiff == 2) && jokerCount > 0) {
+                // build count +2 for card and Joker
+                runBuildCount += 2;
+                jokerCount--;
+                cardRankPointer = card.getRank();
             }
+        }
+
+        // Joker can fit end of run
+        if (runBuildCount == 3 && jokerCount > 0) {
+            runBuildCount++;
         }
 
         return runBuildCount >= 4 ? --runCount : runCount;

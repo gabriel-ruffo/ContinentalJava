@@ -8,7 +8,7 @@ public class TerciaController {
 
     /*
     Rules:
-        if have 6 of same card, be allowed to split it
+        if have 6 or more of same card, be allowed to split it
      */
     public static boolean checkForTercias(Hand hand, int terciaCount) {
         if (terciaCount == 0) {
