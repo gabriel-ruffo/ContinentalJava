@@ -93,4 +93,82 @@ public class RunTest {
 
         assertTrue(RunController.checkForRuns(run, 1));
     }
+
+    @Test
+    public void testRunAceToFour() {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(Suit.CLUB, 1));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 3));
+        cards.add(new Card(Suit.CLUB, 4));
+
+        Hand run = new Hand(cards);
+
+        assertTrue(RunController.checkForRuns(run, 1));
+    }
+
+    @Test
+    public void testRunJackToAce() {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(Suit.CLUB, 11));
+        cards.add(new Card(Suit.CLUB, 12));
+        cards.add(new Card(Suit.CLUB, 13));
+        cards.add(new Card(Suit.CLUB, 1));
+
+        Hand run = new Hand(cards);
+
+        assertTrue(RunController.checkForRuns(run, 1));
+    }
+
+    @Test
+    public void testBothAceCornerCasesDifferentSuits() {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(Suit.CLUB, 1));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 3));
+        cards.add(new Card(Suit.CLUB, 4));
+
+        cards.add(new Card(Suit.DIAMOND, 11));
+        cards.add(new Card(Suit.DIAMOND, 12));
+        cards.add(new Card(Suit.DIAMOND, 13));
+        cards.add(new Card(Suit.DIAMOND, 1));
+        Hand run = new Hand(cards);
+
+        assertTrue(RunController.checkForRuns(run, 2));
+    }
+
+    @Test
+    public void testBothAceCornerCasesSameSuits() {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(Suit.CLUB, 1));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 3));
+        cards.add(new Card(Suit.CLUB, 4));
+
+        cards.add(new Card(Suit.CLUB, 11));
+        cards.add(new Card(Suit.CLUB, 12));
+        cards.add(new Card(Suit.CLUB, 13));
+        cards.add(new Card(Suit.CLUB, 1));
+        Hand run = new Hand(cards);
+
+        assertTrue(RunController.checkForRuns(run, 2));
+    }
+
+    @Test
+    public void testLongRunCanBeOneOrTwoRuns() {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(Suit.CLUB, 1));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 3));
+        cards.add(new Card(Suit.CLUB, 4));
+        cards.add(new Card(Suit.CLUB, 5));
+        cards.add(new Card(Suit.CLUB, 6));
+        cards.add(new Card(Suit.CLUB, 7));
+        cards.add(new Card(Suit.CLUB, 8));
+
+        Hand run = new Hand(cards);
+
+        assertTrue(RunController.checkForRuns(run, 1));
+        assertTrue(RunController.checkForRuns(run, 2));
+    }
 }

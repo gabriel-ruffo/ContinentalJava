@@ -37,14 +37,6 @@ public class RunController {
         return false;
     }
 
-    private static List<Suit> getDistinctSuits(Hand hand) {
-        return hand.getHand().stream().map(Card::getSuit).distinct().collect(Collectors.toList());
-    }
-
-    private static List<Card> getCardsBySuit(Hand hand, Suit suit) {
-        return hand.getHand().stream().filter(card -> card.getSuit() == suit).collect(Collectors.toList());
-    }
-
     private static int findPerfectMatch(List<Card> cards, int runCount, int jokerCount) {
         int cardRankPointer = cards.get(0).getRank();
         int runBuildCount = 1;
@@ -55,10 +47,14 @@ public class RunController {
             if (cardDiff == 1) {
                 runBuildCount++;
                 cardRankPointer = card.getRank();
-            } else if ((cardDiff == 2) && jokerCount > 0) {
+            } else if (straightNeedsJoker(cardDiff, jokerCount)) {
                 // build count +2 for card and Joker
                 runBuildCount += 2;
                 jokerCount--;
+                cardRankPointer = card.getRank();
+            } else if (possibleRoyalStraight(cardDiff)) {
+                // ace to jack -- may be a royal straight
+                runBuildCount += 2;
                 cardRankPointer = card.getRank();
             }
         }
@@ -69,5 +65,21 @@ public class RunController {
         }
 
         return runBuildCount >= 4 ? --runCount : runCount;
+    }
+
+    private static boolean possibleRoyalStraight(int cardDiff) {
+        return cardDiff == 10;
+    }
+
+    private static boolean straightNeedsJoker(int cardDiff, int jokerCount) {
+        return (cardDiff == 2) && jokerCount > 0;
+    }
+
+    private static List<Suit> getDistinctSuits(Hand hand) {
+        return hand.getHand().stream().map(Card::getSuit).distinct().collect(Collectors.toList());
+    }
+
+    private static List<Card> getCardsBySuit(Hand hand, Suit suit) {
+        return hand.getHand().stream().filter(card -> card.getSuit() == suit).collect(Collectors.toList());
     }
 }
