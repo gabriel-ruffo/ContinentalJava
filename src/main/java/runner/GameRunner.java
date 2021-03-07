@@ -6,6 +6,7 @@ import model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class GameRunner {
     private GameController gameController;
@@ -32,12 +33,13 @@ public class GameRunner {
         deck.reinitialize();
 
         for (Player player : players) {
-            deck.dealToPlayer(player, round);
+            IntStream.range(0, round).forEach($ ->
+                    dealCardToPlayer(player));
         }
     }
 
-    public List<Player> getPlayers() {
-        return players;
+    private void dealCardToPlayer(Player player) {
+        player.getHand().addToHand(deck.getCard());
     }
 
 }
