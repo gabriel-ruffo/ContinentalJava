@@ -33,13 +33,12 @@ public class GameRunner {
         deck.reinitialize();
 
         for (Player player : players) {
-            IntStream.range(0, round).forEach($ ->
-                    dealCardToPlayer(player));
+            deck.dealToPlayer(player, round);
         }
     }
 
-    private void dealCardToPlayer(Player player) {
-        player.getHand().addToHand(deck.getCard());
+    public List<Player> getPlayers() {
+        return players;
     }
 
 }

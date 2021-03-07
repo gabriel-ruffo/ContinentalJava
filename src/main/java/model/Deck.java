@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class Deck {
 
@@ -47,5 +48,14 @@ public class Deck {
     public void reinitialize() {
         makeDeck();
         shuffle();
+    }
+
+    public void dealToPlayer(Player player, int round) {
+        IntStream.range(0, round).forEach($ ->
+                dealCardToPlayer(player));
+    }
+
+    private void dealCardToPlayer(Player player) {
+        player.getHand().addToHand(getCard());
     }
 }
