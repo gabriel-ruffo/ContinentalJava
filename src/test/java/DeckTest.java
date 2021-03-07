@@ -12,8 +12,8 @@ public class DeckTest {
         Deck deck = new Deck();
         deck.makeDeck();
 
-        assertEquals(54, deck.getDeck().length);
-        System.out.println(Arrays.toString(deck.getDeck()));
+        assertEquals(54, deck.getDeck().size());
+        System.out.println(deck.getDeck());
     }
 
     @Test
@@ -21,6 +21,6 @@ public class DeckTest {
         Deck deck = new Deck();
         deck.makeDeck();
         deck.shuffle();
-        System.out.println(Arrays.toString(deck.getDeck()));
+        System.out.println(deck.getDeck());
     }
 }

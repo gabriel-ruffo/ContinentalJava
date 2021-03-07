@@ -2,10 +2,11 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 public class Hand {
 
-    private final ArrayList<Card> hand;
+    private final List<Card> hand;
 
     public Hand() {
         hand = new ArrayList<>();
@@ -41,7 +42,7 @@ public class Hand {
        return hand.stream().map(Card::getPoints).reduce(0, Integer::sum);
     }
 
-    public ArrayList<Card> getHand() {
+    public List<Card> getHand() {
         return hand;
     }
 
@@ -51,5 +52,10 @@ public class Hand {
 
     public int getCardCountBySuit(Card card) {
         return (int) hand.stream().filter(predicateCard -> predicateCard.getSuit() == card.getSuit()).count();
+    }
+
+    @Override
+    public String toString() {
+        return "Hand=" + hand.toString() + '}';
     }
 }

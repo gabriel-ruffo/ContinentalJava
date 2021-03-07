@@ -34,4 +34,6 @@ public class Player {
         this.hand = hand;
     }
 
+    public Hand getHand() { return this.hand; }
+
 }
