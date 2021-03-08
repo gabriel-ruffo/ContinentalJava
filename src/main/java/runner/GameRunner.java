@@ -3,11 +3,15 @@ package runner;
 import controller.GameController;
 import model.Deck;
 import model.Player;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameRunner {
+    private final Logger logger = LogManager.getLogger(GameRunner.class);
+
     private final GameController gameController;
     private final List<Player> players;
     private final Deck deck;
@@ -34,6 +38,7 @@ public class GameRunner {
     }
 
     private void setupRound() {
+        logger.info("Setting up round: " + round);
         dealCards();
     }
 
@@ -63,15 +68,12 @@ public class GameRunner {
     }
 
     private void dealCards() {
+        logger.info("Dealing cards to players");
         deck.reinitialize();
 
         for (Player player : players) {
             deck.dealToPlayer(player, round);
         }
-    }
-
-    public List<Player> getPlayers() {
-        return players;
     }
 
 }
