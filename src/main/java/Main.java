@@ -8,10 +8,6 @@ public class Main {
         gameRunner.addPlayer(new Player());
         gameRunner.addPlayer(new Player());
 
-        gameRunner.setupRound();
-
-        for (Player player : gameRunner.getPlayers()) {
-            System.out.println(player.getHand().toString());
-        }
+        gameRunner.play();
     }
 }
