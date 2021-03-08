@@ -3,11 +3,14 @@ package controller;
 import model.Card;
 import model.Hand;
 import model.Suit;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class RunController {
+    private static final Logger ERROR_LOGGER = LogManager.getLogger(RunController.class);
 
     /*
     Test:
@@ -34,6 +37,7 @@ public class RunController {
             }
         }
 
+        ERROR_LOGGER.error("No valid run found");
         return false;
     }
 
