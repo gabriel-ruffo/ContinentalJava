@@ -56,6 +56,7 @@ public class GameRunner {
             round++;
         } else {
             // discard least useful card
+            player.getHand().discardWorstCard(6);
             // keep track of useful/needed cards? during win condition checking?
         }
     }

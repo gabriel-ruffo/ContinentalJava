@@ -110,4 +110,25 @@ public class HandTest {
         assertEquals(2, hand.getCardCountBySuit(new Card(Suit.CLUB, 0)));
         assertEquals(0, hand.getCardCountBySuit(new Card(Suit.SPADE, 0)));
     }
+
+    @Test
+    public void testHand_DiscardWorstCardInRoundSix() {
+        ArrayList<Card> cards = new ArrayList<>();
+        Collections.addAll(cards,
+                new Card(Suit.HEART, 1),
+                new Card(Suit.HEART, 2),
+                new Card(Suit.CLUB, 3),
+                new Card(Suit.DIAMOND, 3),
+                new Card(Suit.DIAMOND, 4),
+                new Card(Suit.CLUB, 5));
+        Hand hand = new Hand(cards);
+
+        assertEquals(6, hand.getHand().size());
+        assertEquals(45, hand.getPoints());
+
+        hand.discardWorstCard(6);
+
+        assertEquals(5, hand.getHand().size());
+        assertEquals(25, hand.getPoints());
+    }
 }

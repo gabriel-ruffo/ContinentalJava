@@ -1,8 +1,7 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Hand {
 
@@ -26,7 +25,7 @@ public class Hand {
 
     public boolean removeFromHand(Card card) {
         for (Card handCard : hand) {
-            if (handCard.getRank() == card.getRank() && handCard.getSuit() == card.getSuit()) {
+            if (handCard.equals(card)) {
                 hand.remove(handCard);
                 return true;
             }
@@ -39,7 +38,7 @@ public class Hand {
     }
 
     public int getPoints() {
-       return hand.stream().map(Card::getPoints).reduce(0, Integer::sum);
+        return hand.stream().map(Card::getPoints).reduce(0, Integer::sum);
     }
 
     public List<Card> getHand() {
@@ -52,6 +51,38 @@ public class Hand {
 
     public int getCardCountBySuit(Card card) {
         return (int) hand.stream().filter(predicateCard -> predicateCard.getSuit() == card.getSuit()).count();
+    }
+
+
+    /*
+    1. If there are distinct cards, they are unneeded
+     */
+    public void discardWorstCard(int round) {
+        if (round == 6) {
+            List<Card> distinctCards = getOneOffCards();
+
+            if (distinctCards.size() != 0) {
+                // there exist extra cards
+                removeFromHand(getHighestPointCard(distinctCards));
+            } else {
+                // check if there are extra cards in existing tercia (4+ cards)
+                // if not ^ toss highest card
+            }
+        }
+    }
+
+    private List<Card> getOneOffCards() {
+        List<Card> oneOffCards = new ArrayList<>();
+        for (Card card : hand) {
+            if (Collections.frequency(hand.stream().map(Card::getRank).collect(Collectors.toList()), card.getRank()) == 1) {
+                oneOffCards.add(card);
+            }
+        }
+        return oneOffCards;
+    }
+
+    private Card getHighestPointCard(List<Card> cards) {
+        return cards.stream().max(Comparator.comparingInt(Card::getPoints)).get();
     }
 
     @Override
