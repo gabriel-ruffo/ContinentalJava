@@ -1,5 +1,7 @@
 package model;
 
+import exceptions.InvalidCardException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,7 +20,7 @@ public class Deck {
         return deck;
     }
 
-    public void makeDeck() {
+    public void makeDeck() throws InvalidCardException {
         int cardCount = 0;
 
         for (Suit suit : Suit.values()) {
@@ -45,7 +47,7 @@ public class Deck {
         return card;
     }
 
-    public void reinitialize() {
+    public void reinitialize() throws InvalidCardException {
         makeDeck();
         shuffle();
     }

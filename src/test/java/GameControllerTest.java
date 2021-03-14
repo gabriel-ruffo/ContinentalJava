@@ -1,4 +1,5 @@
 import controller.GameController;
+import exceptions.InvalidCardException;
 import model.Card;
 import model.Hand;
 import model.Suit;
@@ -12,7 +13,7 @@ public class GameControllerTest {
     GameController gameController = new GameController();
 
     @Test
-    public void test_FirstHandSuccessful() {
+    public void test_FirstHandSuccessful() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.HEART, 2));
         cards.add(new Card(Suit.HEART, 2));
@@ -27,7 +28,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void test_FirstHandSuccessfulUnsorted() {
+    public void test_FirstHandSuccessfulUnsorted() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.SPADE, 3));
         cards.add(new Card(Suit.HEART, 2));
@@ -42,7 +43,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void test_FirstHandOneTercia() {
+    public void test_FirstHandOneTercia() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.HEART, 2));
         cards.add(new Card(Suit.HEART, 2));
@@ -57,7 +58,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void test_roundSixThreePerfectTercias() {
+    public void test_roundSixThreePerfectTercias() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.HEART, 2));
         cards.add(new Card(Suit.HEART, 2));
@@ -75,7 +76,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void test_roundSixTwoPerfectTerciasOneJokerTercia() {
+    public void test_roundSixTwoPerfectTerciasOneJokerTercia() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.HEART, 2));
         cards.add(new Card(Suit.HEART, 2));
@@ -93,7 +94,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void test_roundSixOnePerfectTerciaTwoJokerTercias() {
+    public void test_roundSixOnePerfectTerciaTwoJokerTercias() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.HEART, 2));
         cards.add(new Card(Suit.HEART, 2));
@@ -111,7 +112,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void test_roundSixThreeJokerTercias() {
+    public void test_roundSixThreeJokerTercias() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.HEART, 2));
         cards.add(new Card(Suit.HEART, 2));
@@ -129,7 +130,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void test_roundSixThreeJokerOneTercia() {
+    public void test_roundSixThreeJokerOneTercia() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.HEART, 2));
         cards.add(new Card(Suit.HEART, 1));
@@ -147,7 +148,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void test_roundSixThreeJokerNoTercias() {
+    public void test_roundSixThreeJokerNoTercias() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.HEART, 2));
         cards.add(new Card(Suit.HEART, 1));
@@ -165,7 +166,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void test_roundSixNoTerciasNoJokers() {
+    public void test_roundSixNoTerciasNoJokers() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.HEART, 2));
         cards.add(new Card(Suit.HEART, 1));
@@ -183,7 +184,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void test_roundNineFourPerfectTercias() {
+    public void test_roundNineFourPerfectTercias() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.HEART, 2));
         cards.add(new Card(Suit.HEART, 2));
@@ -204,7 +205,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void test_roundNineFourJokerTercias() {
+    public void test_roundNineFourJokerTercias() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.HEART, 2));
         cards.add(new Card(Suit.HEART, 2));
@@ -225,7 +226,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void test_roundNineThreePerfectTercias() {
+    public void test_roundNineThreePerfectTercias() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.HEART, 2));
         cards.add(new Card(Suit.HEART, 2));

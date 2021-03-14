@@ -1,4 +1,5 @@
 import controller.RunController;
+import exceptions.InvalidCardException;
 import model.Card;
 import model.Hand;
 import model.Suit;
@@ -12,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 public class RunTest {
 
     @Test
-    public void testRunNoJokers() {
+    public void testRunNoJokers() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 2));
         cards.add(new Card(Suit.CLUB, 3));
@@ -25,7 +26,7 @@ public class RunTest {
     }
 
     @Test
-    public void testInvalidRun() {
+    public void testInvalidRun() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 2));
         cards.add(new Card(Suit.CLUB, 3));
@@ -38,7 +39,7 @@ public class RunTest {
     }
 
     @Test
-    public void testTwoRunsNoJokers() {
+    public void testTwoRunsNoJokers() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 2));
         cards.add(new Card(Suit.CLUB, 3));
@@ -55,7 +56,7 @@ public class RunTest {
     }
 
     @Test
-    public void testRunWithJokerInMiddle() {
+    public void testRunWithJokerInMiddle() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 2));
         cards.add(new Card(Suit.CLUB, 3));
@@ -68,7 +69,7 @@ public class RunTest {
     }
 
     @Test
-    public void testRunWithJokerAtEnd() {
+    public void testRunWithJokerAtEnd() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 2));
         cards.add(new Card(Suit.CLUB, 3));
@@ -81,7 +82,7 @@ public class RunTest {
     }
 
     @Test
-    public void testRunWithDuplicateCards() {
+    public void testRunWithDuplicateCards() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 2));
         cards.add(new Card(Suit.CLUB, 3));
@@ -95,7 +96,7 @@ public class RunTest {
     }
 
     @Test
-    public void testRunAceToFour() {
+    public void testRunAceToFour() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 1));
         cards.add(new Card(Suit.CLUB, 2));
@@ -108,7 +109,7 @@ public class RunTest {
     }
 
     @Test
-    public void testRunJackToAce() {
+    public void testRunJackToAce() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 11));
         cards.add(new Card(Suit.CLUB, 12));
@@ -121,7 +122,7 @@ public class RunTest {
     }
 
     @Test
-    public void testBothAceCornerCasesDifferentSuits() {
+    public void testBothAceCornerCasesDifferentSuits() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 1));
         cards.add(new Card(Suit.CLUB, 2));

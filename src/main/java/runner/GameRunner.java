@@ -1,6 +1,7 @@
 package runner;
 
 import controller.GameController;
+import exceptions.InvalidCardException;
 import model.Deck;
 import model.Player;
 import org.apache.logging.log4j.LogManager;
@@ -26,7 +27,7 @@ public class GameRunner {
         round = 6;
     }
 
-    public void play() {
+    public void play() throws InvalidCardException {
         setupRound();
         for (Player player : players) {
             playTurn(player);
@@ -37,12 +38,12 @@ public class GameRunner {
         players.add(player);
     }
 
-    private void setupRound() {
+    private void setupRound() throws InvalidCardException {
         logger.info("Setting up round: " + round);
         dealCards();
     }
 
-    private void playTurn(Player player) {
+    private void playTurn(Player player) throws InvalidCardException {
         /*
         1. Draw card from deck or discard (if one has not already been taken)
         2. Check for win condition
@@ -68,7 +69,7 @@ public class GameRunner {
         player.getHand().sortHand();
     }
 
-    private void dealCards() {
+    private void dealCards() throws InvalidCardException {
         logger.info("Dealing cards to players");
         deck.reinitialize();
 

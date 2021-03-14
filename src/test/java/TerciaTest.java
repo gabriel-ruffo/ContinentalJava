@@ -1,4 +1,5 @@
 import controller.TerciaController;
+import exceptions.InvalidCardException;
 import model.Card;
 import model.Hand;
 import model.Suit;
@@ -11,7 +12,7 @@ import static org.junit.Assert.*;
 public class TerciaTest {
 
     @Test
-    public void testSuccessfulPlainTercia() {
+    public void testSuccessfulPlainTercia() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 2));
         cards.add(new Card(Suit.CLUB, 2));
@@ -22,7 +23,7 @@ public class TerciaTest {
     }
 
     @Test
-    public void testSuccessfulUnsortedTercia() {
+    public void testSuccessfulUnsortedTercia() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 4));
         cards.add(new Card(Suit.CLUB, 2));
@@ -35,7 +36,7 @@ public class TerciaTest {
     }
 
     @Test
-    public void testSuccessfulOneTerciaFromTwo() {
+    public void testSuccessfulOneTerciaFromTwo() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 3));
         cards.add(new Card(Suit.CLUB, 2));
@@ -50,7 +51,7 @@ public class TerciaTest {
     }
 
     @Test
-    public void testSuccessfulOneTerciaWithJoker() {
+    public void testSuccessfulOneTerciaWithJoker() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.HEART, 2));
         cards.add(new Card(Suit.HEART, 2));
@@ -62,7 +63,7 @@ public class TerciaTest {
     }
 
     @Test
-    public void testTwoPossibleTerciasWithOneJoker() {
+    public void testTwoPossibleTerciasWithOneJoker() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.HEART, 2));
         cards.add(new Card(Suit.HEART, 2));
@@ -76,7 +77,7 @@ public class TerciaTest {
     }
 
     @Test
-    public void testNoTerciaWithOneJoker() {
+    public void testNoTerciaWithOneJoker() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.HEART, 2));
         cards.add(new Card(Suit.HEART, 3));
@@ -88,7 +89,7 @@ public class TerciaTest {
     }
 
     @Test
-    public void testHigherCountThanTercias() {
+    public void testHigherCountThanTercias() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 2));
         cards.add(new Card(Suit.CLUB, 2));
@@ -99,7 +100,7 @@ public class TerciaTest {
     }
 
     @Test
-    public void testInvalidTerciaCount() {
+    public void testInvalidTerciaCount() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 2));
         cards.add(new Card(Suit.CLUB, 2));
@@ -110,7 +111,7 @@ public class TerciaTest {
     }
 
     @Test
-    public void testZeroTerciaCount() {
+    public void testZeroTerciaCount() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 2));
         cards.add(new Card(Suit.CLUB, 2));
@@ -121,7 +122,7 @@ public class TerciaTest {
     }
 
     @Test
-    public void testTerciaWithMoreThanThreeCards() {
+    public void testTerciaWithMoreThanThreeCards() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 2));
         cards.add(new Card(Suit.CLUB, 2));
@@ -134,7 +135,7 @@ public class TerciaTest {
     }
 
     @Test
-    public void testInvalidTerciaWithTwoJokers() {
+    public void testInvalidTerciaWithTwoJokers() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.HEART, 2));
         cards.add(new Card(Suit.JOKER, -1));
@@ -146,7 +147,7 @@ public class TerciaTest {
     }
 
     @Test
-    public void testInvalidTerciaWithThreeJokers() {
+    public void testInvalidTerciaWithThreeJokers() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.JOKER, -1));
         cards.add(new Card(Suit.JOKER, -1));

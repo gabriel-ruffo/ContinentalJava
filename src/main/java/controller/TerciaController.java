@@ -1,5 +1,6 @@
 package controller;
 
+import exceptions.InvalidCardException;
 import model.Card;
 import model.Hand;
 import model.Suit;
@@ -10,7 +11,7 @@ public class TerciaController {
     Rules:
         if have 6 or more of same card, be allowed to split it
      */
-    public static boolean checkForTercias(Hand hand, int terciaCount) {
+    public static boolean checkForTercias(Hand hand, int terciaCount) throws InvalidCardException {
         if (terciaCount == 0) {
             return true;
         }
@@ -49,7 +50,7 @@ public class TerciaController {
     }
 
     // a joker match is a pair with a joker
-    private static int checkForJokerMatches(Hand hand, int terciaCount) {
+    private static int checkForJokerMatches(Hand hand, int terciaCount) throws InvalidCardException {
         int jokerCount = hand.getCardCountBySuit(new Card(Suit.JOKER, -1));
         int lastSeenRank = 0;
 

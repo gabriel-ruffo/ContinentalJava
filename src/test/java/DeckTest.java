@@ -1,3 +1,4 @@
+import exceptions.InvalidCardException;
 import model.Deck;
 import org.junit.Test;
 
@@ -8,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 public class DeckTest {
 
     @Test
-    public void testDeck_DeckCreation() {
+    public void testDeck_DeckCreation() throws InvalidCardException {
         Deck deck = new Deck();
         deck.makeDeck();
 
@@ -17,7 +18,7 @@ public class DeckTest {
     }
 
     @Test
-    public void testDeck_DeckShuffle() {
+    public void testDeck_DeckShuffle() throws InvalidCardException {
         Deck deck = new Deck();
         deck.makeDeck();
         deck.shuffle();

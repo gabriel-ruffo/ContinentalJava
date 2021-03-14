@@ -1,5 +1,6 @@
 package controller;
 
+import exceptions.InvalidCardException;
 import model.Card;
 import model.Hand;
 import model.Suit;
@@ -20,7 +21,7 @@ public class RunController {
         jokers
         split 8 count or larger run into two in necessary
      */
-    public static boolean checkForRuns(Hand hand, int runCount) {
+    public static boolean checkForRuns(Hand hand, int runCount) throws InvalidCardException {
         int jokerCount = hand.getCardCountBySuit(new Card(Suit.JOKER, -1));
         hand.sortHand();
         List<Suit> suits = getDistinctSuits(hand);

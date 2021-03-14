@@ -1,3 +1,4 @@
+import exceptions.InvalidCardException;
 import model.Card;
 import model.Hand;
 import model.Suit;
@@ -11,7 +12,7 @@ import static org.junit.Assert.*;
 public class HandTest {
 
     @Test
-    public void testHand_HandCreation() {
+    public void testHand_HandCreation() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.HEART, 2));
         cards.add(new Card(Suit.HEART, 3));
@@ -25,7 +26,7 @@ public class HandTest {
     }
 
     @Test
-    public void testHand_AddToHand() {
+    public void testHand_AddToHand() throws InvalidCardException {
         Hand hand = new Hand();
         assertEquals(0, hand.getHand().size());
         assertTrue(hand.addToHand(new Card(Suit.HEART, 2)));
@@ -38,7 +39,7 @@ public class HandTest {
     }
 
     @Test
-    public void testHand_RemoveFromHand() {
+    public void testHand_RemoveFromHand() throws InvalidCardException {
         Hand hand = new Hand();
         assertTrue(hand.addToHand(new Card(Suit.HEART, 2)));
         assertEquals(1, hand.getHand().size());
@@ -48,7 +49,7 @@ public class HandTest {
     }
 
     @Test
-    public void testHand_SortHandNumeralsAndJoker() {
+    public void testHand_SortHandNumeralsAndJoker() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         Collections.addAll(cards,
                 new Card(Suit.HEART, 10),
@@ -77,7 +78,7 @@ public class HandTest {
     }
 
     @Test
-    public void testHand_GetCardCountByRank() {
+    public void testHand_GetCardCountByRank() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         Collections.addAll(cards,
                 new Card(Suit.HEART, 1),
@@ -95,7 +96,7 @@ public class HandTest {
     }
 
     @Test
-    public void testHand_GetCardCountBySuit() {
+    public void testHand_GetCardCountBySuit() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         Collections.addAll(cards,
                 new Card(Suit.HEART, 1),
@@ -112,7 +113,7 @@ public class HandTest {
     }
 
     @Test
-    public void testHand_DiscardWorstCardInRoundSix() {
+    public void testHand_DiscardWorstCardInRoundSix() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         Collections.addAll(cards,
                 new Card(Suit.HEART, 1),

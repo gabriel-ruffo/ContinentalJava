@@ -1,8 +1,9 @@
+import exceptions.InvalidCardException;
 import model.Card;
 import model.Suit;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class CardTest {
 
@@ -13,8 +14,16 @@ public class CardTest {
     private final Card eight = new Card(Suit.HEART, 8);
     private final Card king = new Card(Suit.HEART, 13);
 
+    public CardTest() throws InvalidCardException {
+    }
+
+    @Test(expected = InvalidCardException.class)
+    public void testInvalidCardCreation() throws InvalidCardException {
+        Card invalid = new Card(null, 0);
+    }
+
     @Test
-    public void testCard_CardCreation() {
+    public void testCard_CardCreation() throws InvalidCardException {
         Card twoOfHearts = new Card(Suit.HEART, 2);
 
         assertEquals(Suit.HEART, twoOfHearts.getSuit());
@@ -35,5 +44,15 @@ public class CardTest {
         assertEquals(5, seven.getPoints());
         assertEquals(10, eight.getPoints());
         assertEquals(10, king.getPoints());
+    }
+
+    @Test
+    public void testCardEquality() throws InvalidCardException {
+        Card diamondTwo = new Card(Suit.DIAMOND, 2);
+        Card dupeTwo = new Card(Suit.HEART, 2);
+
+        assertEquals(two, dupeTwo);
+        assertNotEquals(two, diamondTwo);
+        assertNotEquals(two, null);
     }
 }
