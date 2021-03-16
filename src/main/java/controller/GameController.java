@@ -1,11 +1,7 @@
 package controller;
 
 import exceptions.InvalidCardException;
-import model.Card;
 import model.Hand;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class GameController {
     /*

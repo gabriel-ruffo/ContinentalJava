@@ -19,7 +19,7 @@ public class CardTest {
 
     @Test(expected = InvalidCardException.class)
     public void testInvalidCardCreation() throws InvalidCardException {
-        Card invalid = new Card(null, 0);
+        new Card(null, 0);
     }
 
     @Test

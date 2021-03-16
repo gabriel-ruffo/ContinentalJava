@@ -1,11 +1,17 @@
 package model;
 
+import exceptions.InvalidPointsException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class Player {
+
+    private final Logger PLAYER_LOGGER = LogManager.getLogger(Player.class);
 
     private int points;
     private Hand hand;
 
-    public Player () {
+    public Player() {
         points = 0;
         hand = new Hand();
     }
@@ -19,11 +25,13 @@ public class Player {
         return points;
     }
 
-    public void addPoints(int pointsToAdd) {
-        if(pointsAreValid(pointsToAdd)) {
+    public void addPoints(int pointsToAdd) throws InvalidPointsException {
+        if (pointsAreValid(pointsToAdd)) {
             points += pointsToAdd;
+        } else {
+            PLAYER_LOGGER.error("Given points (" + pointsToAdd + ") are invalid.");
+            throw new InvalidPointsException("Given points (" + pointsToAdd + ") are invalid.");
         }
-        // TODO: how to enforce correct points? Custom exception, boolean return type, ...
     }
 
     private boolean pointsAreValid(int points) {
@@ -34,6 +42,8 @@ public class Player {
         this.hand = hand;
     }
 
-    public Hand getHand() { return this.hand; }
+    public Hand getHand() {
+        return this.hand;
+    }
 
 }

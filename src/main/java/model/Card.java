@@ -23,7 +23,7 @@ public class Card {
     }
 
     public boolean validate() {
-        return rank >= -1 && rank <= 13;
+        return rank >= -1 && rank <= 13 && rank != 0;
     }
 
     public Suit getSuit() {
