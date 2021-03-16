@@ -11,7 +11,7 @@ public class Hand {
         hand = new ArrayList<>();
     }
 
-    public Hand(ArrayList<Card> hand) {
+    public Hand(List<Card> hand) {
         this.hand = hand;
     }
 
