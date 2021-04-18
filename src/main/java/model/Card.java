@@ -8,13 +8,12 @@ import java.util.Objects;
 
 public class Card {
 
-    private final Logger CARD_LOGGER = LogManager.getLogger(Card.class);
-
     private final Suit suit;
     private final int rank;
 
     public Card(Suit suit, int rank) throws InvalidCardException {
         if (suit == null) {
+            Logger CARD_LOGGER = LogManager.getLogger(Card.class);
             CARD_LOGGER.error("Card was attempted to be created with a null suit value.");
             throw new InvalidCardException("Suit can't be null.");
         }

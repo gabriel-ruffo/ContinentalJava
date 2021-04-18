@@ -1,1 +1,3 @@
-2021-03-08 12:37:40.860 [main] ERROR controller.RunController - No valid run found
+2021-04-17 15:01:42.872 [main] ERROR model.Card - Card was attempted to be created with a null suit value.
+2021-04-17 15:01:42.933 [main] ERROR model.Player - Given points (53) are invalid.
+2021-04-17 15:01:42.940 [main] ERROR controller.RunController - No valid run found

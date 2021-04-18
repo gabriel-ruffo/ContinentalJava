@@ -1,5 +1,6 @@
 package controller;
 
+import exceptions.card.InvalidCardException;
 import exceptions.hand.InvalidHandException;
 import model.Card;
 import model.Hand;
@@ -13,11 +14,13 @@ public class HandAnalyzer {
     private final List<Card> terciaPossibles = new ArrayList<>();
     private final List<Card> runPossibles = new ArrayList<>();
     private final List<Card> flexCards = new ArrayList<>();
+    private int jokerCount;
 
-    public void generateHandComponents(Hand hand) throws InvalidHandException {
+    public void generateHandComponents(Hand hand) throws InvalidHandException, InvalidCardException {
         if (hand == null) {
             throw new InvalidHandException("Hand can't be null");
         }
+        jokerCount = hand.getCardCountBySuit(new Card(Suit.JOKER, -1));
         generateTerciaComponent(hand);
         generateRunComponent(hand);
         generateFlexCardsComponent(hand);
@@ -58,6 +61,21 @@ public class HandAnalyzer {
         }
     }
 
+    private void generateFlexCardsComponent(Hand hand) {
+        List<Card> jokers = hand.getHand().stream().
+                filter(predicateCard -> predicateCard.getSuit() == Suit.JOKER)
+                .collect(Collectors.toList());
+        flexCards.addAll(jokers);
+
+        for (Card terciaCard : terciaPossibles) {
+            for (Card runCard : runPossibles) {
+                if (terciaCard == runCard) {
+                    flexCards.add(terciaCard);
+                }
+            }
+        }
+    }
+
     private void filterCardsByWeight(List<Card> cards) {
         for (int i = 0; i < cards.size() - 1; i++) {
             Card cardOne = cards.get(i);
@@ -71,6 +89,9 @@ public class HandAnalyzer {
 
     private boolean withinWeight(Card cardOne, Card cardTwo) {
         int weight = getWeight(cardOne.getRank(), cardTwo.getRank());
+        if (jokerCount > 0) {
+            weight--;
+        }
         return weight > 0 && weight <= 2;
     }
 
@@ -81,21 +102,6 @@ public class HandAnalyzer {
     private void addRunCardsIfNotPresent(Card card) {
         if (!runPossibles.contains(card)) {
             runPossibles.add(card);
-        }
-    }
-
-    private void generateFlexCardsComponent(Hand hand) {
-        List<Card> jokers = hand.getHand().stream().
-                filter(predicateCard -> predicateCard.getSuit() == Suit.JOKER)
-                .collect(Collectors.toList());
-        flexCards.addAll(jokers);
-
-        for (Card terciaCard : terciaPossibles) {
-            for (Card runCard : runPossibles) {
-                if (terciaCard == runCard) {
-                    flexCards.add(terciaCard);
-                }
-            }
         }
     }
 
