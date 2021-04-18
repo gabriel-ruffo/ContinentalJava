@@ -1,8 +1,6 @@
-import exceptions.InvalidCardException;
+import exceptions.card.InvalidCardException;
 import model.Deck;
 import org.junit.Test;
-
-import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 

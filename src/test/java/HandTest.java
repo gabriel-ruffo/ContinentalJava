@@ -1,4 +1,4 @@
-import exceptions.InvalidCardException;
+import exceptions.card.InvalidCardException;
 import model.Card;
 import model.Hand;
 import model.Suit;

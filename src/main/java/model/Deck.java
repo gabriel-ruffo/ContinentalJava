@@ -1,6 +1,9 @@
 package model;
 
-import exceptions.InvalidCardException;
+import exceptions.card.InvalidCardException;
+import exceptions.deck.InvalidDeckException;
+import exceptions.game.InvalidRoundException;
+import exceptions.player.InvalidPlayerException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,9 +40,9 @@ public class Deck {
         Collections.shuffle(deck);
     }
 
-    public Card getCard() {
+    public Card getCard() throws InvalidDeckException {
         if (deck.isEmpty()) {
-            // throw new empty deck exception
+            throw new InvalidDeckException("Deck can't be empty");
         }
 
         Card card = deck.get(0);
@@ -53,19 +56,26 @@ public class Deck {
         shuffle();
     }
 
-    public void dealToPlayer(Player player, int round) {
+    public void dealToPlayer(Player player, int round) throws InvalidPlayerException, InvalidRoundException {
         if (player == null) {
-            // throw new invalid player exception
+            throw new InvalidPlayerException("Player can't be null");
         }
 
         if (!roundIsValid(round)) {
-            // throw new invalid round exception
+            throw new InvalidRoundException("Round " + round + " is invalid. Must be between 6 and 13");
         }
+
         IntStream.range(0, round).forEach($ ->
-                dealCardToPlayer(player));
+        {
+            try {
+                dealCardToPlayer(player);
+            } catch (InvalidDeckException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
-    private void dealCardToPlayer(Player player) {
+    private void dealCardToPlayer(Player player) throws InvalidDeckException {
         player.getHand().addToHand(getCard());
     }
 

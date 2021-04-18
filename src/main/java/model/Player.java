@@ -1,6 +1,6 @@
 package model;
 
-import exceptions.InvalidPointsException;
+import exceptions.points.InvalidPointsException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

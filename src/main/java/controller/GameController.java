@@ -1,6 +1,6 @@
 package controller;
 
-import exceptions.InvalidCardException;
+import exceptions.card.InvalidCardException;
 import model.Hand;
 
 public class GameController {

@@ -1,7 +1,9 @@
 package runner;
 
 import controller.GameController;
-import exceptions.InvalidCardException;
+import exceptions.card.InvalidCardException;
+import exceptions.game.InvalidRoundException;
+import exceptions.player.InvalidPlayerException;
 import model.Deck;
 import model.Player;
 import org.apache.logging.log4j.LogManager;
@@ -27,7 +29,7 @@ public class GameRunner {
         round = 6;
     }
 
-    public void play() throws InvalidCardException {
+    public void play() throws InvalidCardException, InvalidPlayerException, InvalidRoundException {
         setupRound();
         for (Player player : players) {
             playTurn(player);
@@ -38,12 +40,12 @@ public class GameRunner {
         players.add(player);
     }
 
-    private void setupRound() throws InvalidCardException {
+    private void setupRound() throws InvalidCardException, InvalidPlayerException, InvalidRoundException {
         logger.info("Setting up round: " + round);
         dealCards();
     }
 
-    private void playTurn(Player player) throws InvalidCardException {
+    private void playTurn(Player player) throws InvalidCardException, InvalidPlayerException, InvalidRoundException {
         /*
         1. Draw card from deck or discard (if one has not already been taken)
         2. Check for win condition
@@ -62,14 +64,14 @@ public class GameRunner {
         }
     }
 
-    private void drawCard(Player player) {
+    private void drawCard(Player player) throws InvalidPlayerException, InvalidRoundException {
         // if want discarded card
         // discardPile.dealToPlayer(player, 1);
         deck.dealToPlayer(player, 1);
         player.getHand().sortHand();
     }
 
-    private void dealCards() throws InvalidCardException {
+    private void dealCards() throws InvalidCardException, InvalidPlayerException, InvalidRoundException {
         logger.info("Dealing cards to players");
         deck.reinitialize();
 

@@ -1,5 +1,4 @@
-import exceptions.InvalidCardException;
-import exceptions.InvalidPointsException;
+import exceptions.points.InvalidPointsException;
 import model.Hand;
 import model.Player;
 import org.junit.Test;
