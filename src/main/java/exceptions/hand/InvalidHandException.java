@@ -1,6 +1,8 @@
 package exceptions.hand;
 
-public class InvalidHandException extends Exception {
+import exceptions.GeneralGameException;
+
+public class InvalidHandException extends GeneralGameException {
     public InvalidHandException(String errorMessage) {
         super(errorMessage);
     }

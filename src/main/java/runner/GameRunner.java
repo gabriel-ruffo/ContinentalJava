@@ -1,8 +1,12 @@
 package runner;
 
 import controller.GameController;
+import controller.HandAnalyzer;
+import exceptions.GeneralGameException;
 import exceptions.card.InvalidCardException;
+import exceptions.deck.InvalidDeckException;
 import exceptions.game.InvalidRoundException;
+import exceptions.hand.InvalidHandException;
 import exceptions.player.InvalidPlayerException;
 import model.Deck;
 import model.Player;
@@ -18,8 +22,10 @@ public class GameRunner {
     private final GameController gameController;
     private final List<Player> players;
     private final Deck deck;
-    private Deck discardPile;
+    private final Deck discardPile;
     private int round;
+    private final HandAnalyzer handAnalyzer;
+    private boolean discardCardHasBeenGrabbed = false;
 
     public GameRunner() {
         gameController = new GameController();
@@ -27,9 +33,10 @@ public class GameRunner {
         deck = new Deck();
         discardPile = new Deck();
         round = 6;
+        handAnalyzer = new HandAnalyzer();
     }
 
-    public void play() throws InvalidCardException, InvalidPlayerException, InvalidRoundException {
+    public void play() throws GeneralGameException {
         setupRound();
         for (Player player : players) {
             playTurn(player);
@@ -45,7 +52,8 @@ public class GameRunner {
         dealCards();
     }
 
-    private void playTurn(Player player) throws InvalidCardException, InvalidPlayerException, InvalidRoundException {
+    private void playTurn(Player player) throws InvalidPlayerException, InvalidDeckException, InvalidRoundException,
+            InvalidHandException, InvalidCardException {
         /*
         1. Draw card from deck or discard (if one has not already been taken)
         2. Check for win condition
@@ -53,22 +61,46 @@ public class GameRunner {
         2.b. If no win: discard card
          */
         drawCard(player);
-        if (gameController.checkHandForWinCondition(player.getHand(), 6)) {
-            // go down
-            System.out.println(player.toString() + " wins round " + round + "!");
+        if (gameController.checkHandForWinCondition(player.getHand(), round)) {
+            // TODO: implement goDown() -- don't win unless all cards in hand are gone
+            System.out.println(player + " wins round " + round + "!");
             round++;
         } else {
-            // discard least useful card
-            player.getHand().discardWorstCard(6);
-            // keep track of useful/needed cards? during win condition checking?
+            // TODO: implement discardCard()
+            discardCard(player);
+            discardCardHasBeenGrabbed = false;
         }
     }
 
-    private void drawCard(Player player) throws InvalidPlayerException, InvalidRoundException {
-        // if want discarded card
-        // discardPile.dealToPlayer(player, 1);
-        deck.dealToPlayer(player, 1);
+    private void discardCard(Player player) {
+        discardPile.getDeck().add(player.getHand().discardWorstCard(round));
+    }
+
+    private void drawCard(Player player) throws InvalidPlayerException, InvalidDeckException, InvalidRoundException,
+            InvalidHandException, InvalidCardException {
+        if (!discardCardHasBeenGrabbed) {
+            checkDiscardCardDesirability(player);
+        } else {
+            deck.dealToPlayer(player, 1);
+        }
         player.getHand().sortHand();
+    }
+
+    private void checkDiscardCardDesirability(Player player) throws InvalidDeckException, InvalidPlayerException,
+            InvalidRoundException, InvalidHandException, InvalidCardException {
+        for (Player drawPlayer : players) {
+            if (handAnalyzer.cardHelpsPlayer(drawPlayer, discardPile.getCard())) {
+                discardPile.dealToPlayer(drawPlayer, 1);
+                checkForOutOfTurn(drawPlayer, player);
+                discardCardHasBeenGrabbed = true;
+            }
+        }
+    }
+
+    private void checkForOutOfTurn(Player drawPlayer, Player player) throws InvalidPlayerException, InvalidRoundException {
+        if (!drawPlayer.equals(player)) {
+            deck.dealToPlayer(drawPlayer, 1);
+        }
     }
 
     private void dealCards() throws InvalidCardException, InvalidPlayerException, InvalidRoundException {

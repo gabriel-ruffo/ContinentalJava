@@ -4,6 +4,7 @@ import exceptions.card.InvalidCardException;
 import exceptions.hand.InvalidHandException;
 import model.Card;
 import model.Hand;
+import model.Player;
 import model.Suit;
 
 import java.util.ArrayList;
@@ -11,19 +12,27 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class HandAnalyzer {
-    private final List<Card> terciaPossibles = new ArrayList<>();
-    private final List<Card> runPossibles = new ArrayList<>();
-    private final List<Card> flexCards = new ArrayList<>();
+    private List<Card> terciaPossibles;
+    private List<Card> runPossibles;
+    private List<Card> flexCards;
     private int jokerCount;
 
     public void generateHandComponents(Hand hand) throws InvalidHandException, InvalidCardException {
         if (hand == null) {
             throw new InvalidHandException("Hand can't be null");
         }
+        initLists();
         jokerCount = hand.getCardCountBySuit(new Card(Suit.JOKER, -1));
+
         generateTerciaComponent(hand);
         generateRunComponent(hand);
         generateFlexCardsComponent(hand);
+    }
+
+    private void initLists() {
+        terciaPossibles = new ArrayList<>();
+        runPossibles = new ArrayList<>();
+        flexCards = new ArrayList<>();
     }
 
     public List<Card> getTerciaPossibles() {
@@ -114,4 +123,17 @@ public class HandAnalyzer {
     }
 
 
+    public boolean cardHelpsPlayer(Player player, Card card) throws InvalidHandException, InvalidCardException {
+        Hand playerHand = player.getHand();
+        generateHandComponents(player.getHand());
+        int initTerciaComponentWeight = terciaPossibles.size();
+        int initRunsComponentWeight = runPossibles.size();
+
+        playerHand.addToHand(card);
+        generateHandComponents(playerHand);
+        int newTerciaComponentWeight = terciaPossibles.size();
+        int newRunsComponentWeight = runPossibles.size();
+
+        return initTerciaComponentWeight < newTerciaComponentWeight || initRunsComponentWeight < newRunsComponentWeight;
+    }
 }

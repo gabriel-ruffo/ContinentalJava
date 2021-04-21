@@ -178,4 +178,29 @@ public class HandAnalyzerTest {
         assertEquals(0, handAnalyzer.getTerciaPossibles().size());
         assertEquals(0, handAnalyzer.getFlexCards().size());
     }
+
+    @Test
+    public void testTerciasAndRunsBeforeAndAfterAddingCards() throws InvalidHandException, InvalidCardException {
+        List<Card> cards = new ArrayList<>();
+        Collections.addAll(cards,
+                new Card(Suit.HEART, 2),
+                new Card(Suit.HEART, 3),
+                new Card(Suit.HEART, 5),
+                new Card(Suit.SPADE, 2),
+                new Card(Suit.SPADE, 7));
+        Hand hand = new Hand(cards);
+        HandAnalyzer handAnalyzer = new HandAnalyzer();
+        handAnalyzer.generateHandComponents(hand);
+
+        assertEquals(3, handAnalyzer.getRunPossibles().size());
+        assertEquals(2, handAnalyzer.getTerciaPossibles().size());
+        assertEquals(1, handAnalyzer.getFlexCards().size());
+
+        hand.addToHand(new Card(Suit.HEART, 7));
+        handAnalyzer.generateHandComponents(hand);
+
+        assertEquals(4, handAnalyzer.getRunPossibles().size());
+        assertEquals(4, handAnalyzer.getTerciaPossibles().size());
+        assertEquals(2, handAnalyzer.getFlexCards().size());
+    }
 }

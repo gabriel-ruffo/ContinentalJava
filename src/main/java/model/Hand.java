@@ -57,28 +57,17 @@ public class Hand {
     /*
     1. If there are distinct cards, they are unneeded
      */
-    public void discardWorstCard(int round) {
-        if (round == 6) {
-            List<Card> distinctCards = getOneOffCards();
-
-            if (distinctCards.size() != 0) {
-                // there exist extra cards
-                removeFromHand(getHighestPointCard(distinctCards));
-            } else {
-                // check if there are extra cards in existing tercia (4+ cards)
-                // if not ^ toss highest card
-            }
-        }
-    }
-
-    private List<Card> getOneOffCards() {
-        List<Card> oneOffCards = new ArrayList<>();
-        for (Card card : hand) {
-            if (Collections.frequency(hand.stream().map(Card::getRank).collect(Collectors.toList()), card.getRank()) == 1) {
-                oneOffCards.add(card);
-            }
-        }
-        return oneOffCards;
+    public Card discardWorstCard(int round) {
+//        if (round == 6) {
+//            if (distinctCards.size() != 0) {
+//                // there exist extra cards
+//                removeFromHand(getHighestPointCard(distinctCards));
+//            } else {
+//                // check if there are extra cards in existing tercia (4+ cards)
+//                // if not ^ toss highest card
+//            }
+//        }
+        return null;
     }
 
     private Card getHighestPointCard(List<Card> cards) {

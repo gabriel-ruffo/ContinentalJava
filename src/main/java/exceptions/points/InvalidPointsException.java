@@ -1,6 +1,8 @@
 package exceptions.points;
 
-public class InvalidPointsException extends Exception {
+import exceptions.GeneralGameException;
+
+public class InvalidPointsException extends GeneralGameException {
     public InvalidPointsException(String errorMessage) {
         super(errorMessage);
     }

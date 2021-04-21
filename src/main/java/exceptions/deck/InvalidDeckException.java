@@ -1,6 +1,8 @@
 package exceptions.deck;
 
-public class InvalidDeckException extends Exception {
+import exceptions.GeneralGameException;
+
+public class InvalidDeckException extends GeneralGameException {
     public InvalidDeckException(String errorMessage) {
         super(errorMessage);
     }

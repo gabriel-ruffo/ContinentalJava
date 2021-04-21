@@ -1,6 +1,8 @@
 package exceptions.card;
 
-public class InvalidCardException extends Exception {
+import exceptions.GeneralGameException;
+
+public class InvalidCardException extends GeneralGameException {
     public InvalidCardException(String errorMessage) {
         super(errorMessage);
     }

@@ -1,6 +1,8 @@
 package exceptions.game;
 
-public class InvalidRoundException extends Exception {
+import exceptions.GeneralGameException;
+
+public class InvalidRoundException extends GeneralGameException {
     public InvalidRoundException(String errorMessage) {
         super(errorMessage);
     }
