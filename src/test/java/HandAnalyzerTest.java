@@ -17,7 +17,7 @@ public class HandAnalyzerTest {
     @Test(expected = InvalidHandException.class)
     public void testNullHand() throws InvalidHandException, InvalidCardException {
         HandAnalyzer handAnalyzer = new HandAnalyzer();
-        handAnalyzer.generateHandComponents(null);
+        handAnalyzer.generateHandComponents(null, 7);
 
         assertEquals(0, handAnalyzer.getTerciaPossibles().size());
         assertEquals(0, handAnalyzer.getRunPossibles().size());
@@ -36,7 +36,7 @@ public class HandAnalyzerTest {
                 new Card(Suit.SPADE, 13));
         Hand hand = new Hand(cards);
         HandAnalyzer handAnalyzer = new HandAnalyzer();
-        handAnalyzer.generateHandComponents(hand);
+        handAnalyzer.generateHandComponents(hand, 8);
 
         assertEquals(4, handAnalyzer.getRunPossibles().size());
         assertEquals(0, handAnalyzer.getTerciaPossibles().size());
@@ -55,7 +55,7 @@ public class HandAnalyzerTest {
                 new Card(Suit.DIAMOND, 5));
         Hand hand = new Hand(cards);
         HandAnalyzer handAnalyzer = new HandAnalyzer();
-        handAnalyzer.generateHandComponents(hand);
+        handAnalyzer.generateHandComponents(hand, 6);
 
         assertEquals(5, handAnalyzer.getTerciaPossibles().size());
         assertEquals(0, handAnalyzer.getRunPossibles().size());
@@ -74,7 +74,7 @@ public class HandAnalyzerTest {
                 new Card(Suit.SPADE, 7));
         Hand hand = new Hand(cards);
         HandAnalyzer handAnalyzer = new HandAnalyzer();
-        handAnalyzer.generateHandComponents(hand);
+        handAnalyzer.generateHandComponents(hand, 7);
 
         assertEquals(4, handAnalyzer.getRunPossibles().size());
         assertEquals(4, handAnalyzer.getTerciaPossibles().size());
@@ -95,7 +95,7 @@ public class HandAnalyzerTest {
         Hand hand = new Hand(cards);
         hand.sortHand();
         HandAnalyzer handAnalyzer = new HandAnalyzer();
-        handAnalyzer.generateHandComponents(hand);
+        handAnalyzer.generateHandComponents(hand, 8);
 
         assertEquals(4, handAnalyzer.getRunPossibles().size());
         assertEquals(0, handAnalyzer.getTerciaPossibles().size());
@@ -112,7 +112,7 @@ public class HandAnalyzerTest {
                 new Card(Suit.JOKER, -1));
         Hand hand = new Hand(cards);
         HandAnalyzer handAnalyzer = new HandAnalyzer();
-        handAnalyzer.generateHandComponents(hand);
+        handAnalyzer.generateHandComponents(hand, 6);
 
         assertEquals(2, handAnalyzer.getTerciaPossibles().size());
         assertEquals(0, handAnalyzer.getRunPossibles().size());
@@ -131,7 +131,7 @@ public class HandAnalyzerTest {
                 new Card(Suit.SPADE, 13));
         Hand hand = new Hand(cards);
         HandAnalyzer handAnalyzer = new HandAnalyzer();
-        handAnalyzer.generateHandComponents(hand);
+        handAnalyzer.generateHandComponents(hand, 8);
 
         assertEquals(2, handAnalyzer.getRunPossibles().size());
         assertEquals(0, handAnalyzer.getTerciaPossibles().size());
@@ -153,7 +153,7 @@ public class HandAnalyzerTest {
         Hand hand = new Hand(cards);
         HandAnalyzer handAnalyzer = new HandAnalyzer();
         hand.sortHand();
-        handAnalyzer.generateHandComponents(hand);
+        handAnalyzer.generateHandComponents(hand, 7);
 
         assertEquals(2, handAnalyzer.getRunPossibles().size());
         assertEquals(3, handAnalyzer.getTerciaPossibles().size());
@@ -172,7 +172,7 @@ public class HandAnalyzerTest {
         Hand hand = new Hand(cards);
         HandAnalyzer handAnalyzer = new HandAnalyzer();
         hand.sortHand();
-        handAnalyzer.generateHandComponents(hand);
+        handAnalyzer.generateHandComponents(hand, 7);
 
         assertEquals(0, handAnalyzer.getRunPossibles().size());
         assertEquals(0, handAnalyzer.getTerciaPossibles().size());
@@ -190,14 +190,14 @@ public class HandAnalyzerTest {
                 new Card(Suit.SPADE, 7));
         Hand hand = new Hand(cards);
         HandAnalyzer handAnalyzer = new HandAnalyzer();
-        handAnalyzer.generateHandComponents(hand);
+        handAnalyzer.generateHandComponents(hand, 7);
 
         assertEquals(3, handAnalyzer.getRunPossibles().size());
         assertEquals(2, handAnalyzer.getTerciaPossibles().size());
         assertEquals(1, handAnalyzer.getFlexCards().size());
 
         hand.addToHand(new Card(Suit.HEART, 7));
-        handAnalyzer.generateHandComponents(hand);
+        handAnalyzer.generateHandComponents(hand, 7);
 
         assertEquals(4, handAnalyzer.getRunPossibles().size());
         assertEquals(4, handAnalyzer.getTerciaPossibles().size());

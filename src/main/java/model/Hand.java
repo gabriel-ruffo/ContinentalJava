@@ -1,7 +1,8 @@
 package model;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class Hand {
 
@@ -53,25 +54,8 @@ public class Hand {
         return (int) hand.stream().filter(predicateCard -> predicateCard.getSuit() == card.getSuit()).count();
     }
 
-
-    /*
-    1. If there are distinct cards, they are unneeded
-     */
-    public Card discardWorstCard(int round) {
-//        if (round == 6) {
-//            if (distinctCards.size() != 0) {
-//                // there exist extra cards
-//                removeFromHand(getHighestPointCard(distinctCards));
-//            } else {
-//                // check if there are extra cards in existing tercia (4+ cards)
-//                // if not ^ toss highest card
-//            }
-//        }
-        return null;
-    }
-
-    private Card getHighestPointCard(List<Card> cards) {
-        return cards.stream().max(Comparator.comparingInt(Card::getPoints)).get();
+    public Card getHighestPointCard() {
+        return hand.stream().max(Comparator.comparingInt(Card::getPoints)).get();
     }
 
     @Override

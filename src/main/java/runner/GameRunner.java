@@ -2,6 +2,7 @@ package runner;
 
 import controller.GameController;
 import controller.HandAnalyzer;
+import controller.HandController;
 import exceptions.GeneralGameException;
 import exceptions.card.InvalidCardException;
 import exceptions.deck.InvalidDeckException;
@@ -72,8 +73,10 @@ public class GameRunner {
         }
     }
 
-    private void discardCard(Player player) {
-        discardPile.getDeck().add(player.getHand().discardWorstCard(round));
+    private void discardCard(Player player) throws InvalidHandException, InvalidCardException {
+        HandController handController = new HandController();
+        discardPile.getDeck().add(
+                handController.discardWorstCard(player.getHand(), round));
     }
 
     private void drawCard(Player player) throws InvalidPlayerException, InvalidDeckException, InvalidRoundException,

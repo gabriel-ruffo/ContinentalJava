@@ -1,4 +1,6 @@
+import controller.HandController;
 import exceptions.card.InvalidCardException;
+import exceptions.hand.InvalidHandException;
 import model.Card;
 import model.Hand;
 import model.Suit;
@@ -113,7 +115,8 @@ public class HandTest {
     }
 
     @Test
-    public void testHand_DiscardWorstCardInRoundSix() throws InvalidCardException {
+    public void testHand_DiscardWorstCardInRoundSix() throws InvalidCardException, InvalidHandException {
+        HandController handController = new HandController();
         ArrayList<Card> cards = new ArrayList<>();
         Collections.addAll(cards,
                 new Card(Suit.HEART, 1),
@@ -127,7 +130,7 @@ public class HandTest {
         assertEquals(6, hand.getHand().size());
         assertEquals(45, hand.getPoints());
 
-        hand.discardWorstCard(6);
+        handController.discardWorstCard(hand, 6);
 
         assertEquals(5, hand.getHand().size());
         assertEquals(25, hand.getPoints());

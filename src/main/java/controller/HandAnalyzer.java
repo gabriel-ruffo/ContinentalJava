@@ -15,24 +15,50 @@ public class HandAnalyzer {
     private List<Card> terciaPossibles;
     private List<Card> runPossibles;
     private List<Card> flexCards;
+    private List<List<Card>> perfectTercias;
+    private List<List<Card>> incompleteTercias;
+    private List<List<Card>> overflowTercias;
     private int jokerCount;
+    private int round;
 
-    public void generateHandComponents(Hand hand) throws InvalidHandException, InvalidCardException {
+    public void generateHandComponents(Hand hand, int round) throws InvalidHandException, InvalidCardException {
         if (hand == null) {
             throw new InvalidHandException("Hand can't be null");
         }
+        this.round = round;
         initLists();
         jokerCount = hand.getCardCountBySuit(new Card(Suit.JOKER, -1));
 
-        generateTerciaComponent(hand);
-        generateRunComponent(hand);
+        if (roundNeedsOnlyTercias(round)) {
+            generateTerciaComponent(hand);
+        } else if (roundNeedsOnlyRuns(round)) {
+            generateRunComponent(hand);
+        } else {
+            generateTerciaComponent(hand);
+            generateRunComponent(hand);
+        }
         generateFlexCardsComponent(hand);
+    }
+
+    public void generateTerciaTypes() {
+
+    }
+
+    private boolean roundNeedsOnlyTercias(int round) {
+        return round == 6 || round == 9 || round == 12;
+    }
+
+    private boolean roundNeedsOnlyRuns(int round) {
+        return round == 8 || round == 13;
     }
 
     private void initLists() {
         terciaPossibles = new ArrayList<>();
         runPossibles = new ArrayList<>();
         flexCards = new ArrayList<>();
+        perfectTercias = new ArrayList<>();
+        incompleteTercias = new ArrayList<>();
+        overflowTercias = new ArrayList<>();
     }
 
     public List<Card> getTerciaPossibles() {
@@ -122,15 +148,14 @@ public class HandAnalyzer {
         return hand.getHand().stream().filter(card -> card.getSuit() == suit).collect(Collectors.toList());
     }
 
-
     public boolean cardHelpsPlayer(Player player, Card card) throws InvalidHandException, InvalidCardException {
         Hand playerHand = player.getHand();
-        generateHandComponents(player.getHand());
+        generateHandComponents(player.getHand(), round);
         int initTerciaComponentWeight = terciaPossibles.size();
         int initRunsComponentWeight = runPossibles.size();
 
         playerHand.addToHand(card);
-        generateHandComponents(playerHand);
+        generateHandComponents(playerHand,round);
         int newTerciaComponentWeight = terciaPossibles.size();
         int newRunsComponentWeight = runPossibles.size();
 
