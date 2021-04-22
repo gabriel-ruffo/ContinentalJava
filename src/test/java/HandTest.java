@@ -135,4 +135,24 @@ public class HandTest {
         assertEquals(5, hand.getHand().size());
         assertEquals(25, hand.getPoints());
     }
+
+    @Test
+    public void testHandDoNotDiscardJoker() throws InvalidCardException, InvalidHandException {
+        HandController handController = new HandController();
+        ArrayList<Card> cards = new ArrayList<>();
+        Collections.addAll(cards,
+                new Card(Suit.HEART, 1),
+                new Card(Suit.CLUB, 5),
+                new Card(Suit.JOKER, -1));
+        Hand hand = new Hand(cards);
+
+        assertEquals(3, hand.getHand().size());
+        assertEquals(75, hand.getPoints());
+
+        handController.discardWorstCard(hand, 6);
+
+        assertEquals(2, hand.getHand().size());
+        assertEquals(55, hand.getPoints());
+    }
+
 }

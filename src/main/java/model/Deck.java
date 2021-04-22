@@ -4,6 +4,8 @@ import exceptions.card.InvalidCardException;
 import exceptions.deck.InvalidDeckException;
 import exceptions.game.InvalidRoundException;
 import exceptions.player.InvalidPlayerException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +15,7 @@ import java.util.stream.IntStream;
 public class Deck {
 
     private final List<Card> deck;
+    private final Logger DECK_LOGGER = LogManager.getLogger(Deck.class);
 
     public Deck() {
         deck = new ArrayList<>();
@@ -48,7 +51,17 @@ public class Deck {
         Card card = deck.get(0);
         deck.remove(0);
 
+        DECK_LOGGER.info("Dealing Card: " + card.toString());
+
         return card;
+    }
+
+    public Card peekCard() throws InvalidDeckException {
+        if (deck.isEmpty()) {
+            throw new InvalidDeckException("Deck is empty");
+        }
+
+        return deck.get(0);
     }
 
     public void reinitialize() throws InvalidCardException {
@@ -59,10 +72,6 @@ public class Deck {
     public void dealToPlayer(Player player, int round) throws InvalidPlayerException, InvalidRoundException {
         if (player == null) {
             throw new InvalidPlayerException("Player can't be null");
-        }
-
-        if (!roundIsValid(round)) {
-            throw new InvalidRoundException("Round " + round + " is invalid. Must be between 6 and 13");
         }
 
         IntStream.range(0, round).forEach($ ->

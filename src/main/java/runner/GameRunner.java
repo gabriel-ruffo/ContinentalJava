@@ -67,7 +67,6 @@ public class GameRunner {
             System.out.println(player + " wins round " + round + "!");
             round++;
         } else {
-            // TODO: implement discardCard()
             discardCard(player);
             discardCardHasBeenGrabbed = false;
         }
@@ -81,23 +80,27 @@ public class GameRunner {
 
     private void drawCard(Player player) throws InvalidPlayerException, InvalidDeckException, InvalidRoundException,
             InvalidHandException, InvalidCardException {
-        if (!discardCardHasBeenGrabbed) {
-            checkDiscardCardDesirability(player);
+        if (!discardCardHasBeenGrabbed && discardPile.getDeck().size() > 0) {
+            if (!checkDiscardCardDesirability(player)) {
+                deck.dealToPlayer(player, 1);
+            }
         } else {
             deck.dealToPlayer(player, 1);
         }
         player.getHand().sortHand();
     }
 
-    private void checkDiscardCardDesirability(Player player) throws InvalidDeckException, InvalidPlayerException,
+    private boolean checkDiscardCardDesirability(Player player) throws InvalidDeckException, InvalidPlayerException,
             InvalidRoundException, InvalidHandException, InvalidCardException {
         for (Player drawPlayer : players) {
-            if (handAnalyzer.cardHelpsPlayer(drawPlayer, discardPile.getCard())) {
+            if (handAnalyzer.cardHelpsPlayer(drawPlayer, discardPile.peekCard(), round)) {
                 discardPile.dealToPlayer(drawPlayer, 1);
                 checkForOutOfTurn(drawPlayer, player);
                 discardCardHasBeenGrabbed = true;
+                return true;
             }
         }
+        return false;
     }
 
     private void checkForOutOfTurn(Player drawPlayer, Player player) throws InvalidPlayerException, InvalidRoundException {

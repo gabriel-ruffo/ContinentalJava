@@ -15,9 +15,11 @@ public class HandAnalyzer {
     private List<Card> terciaPossibles;
     private List<Card> runPossibles;
     private List<Card> flexCards;
+
     private List<List<Card>> perfectTercias;
     private List<List<Card>> incompleteTercias;
     private List<List<Card>> overflowTercias;
+
     private int jokerCount;
     private int round;
 
@@ -40,8 +42,18 @@ public class HandAnalyzer {
         generateFlexCardsComponent(hand);
     }
 
-    public void generateTerciaTypes() {
-
+    public void generateTerciaTypes(Hand hand) {
+        List<Integer> distinctRanks = getDistinctRanks(hand);
+        for (int rank : distinctRanks) {
+            List<Card> cardsByRank = hand.getHand().stream().filter(card -> card.getRank() == rank).collect(Collectors.toList());
+            if (cardsByRank.size() == 2) {
+                incompleteTercias.add(cardsByRank);
+            } else if (cardsByRank.size() == 3) {
+                perfectTercias.add(cardsByRank);
+            } else if (cardsByRank.size() > 3) {
+                overflowTercias.add(cardsByRank);
+            }
+        }
     }
 
     private boolean roundNeedsOnlyTercias(int round) {
@@ -144,21 +156,32 @@ public class HandAnalyzer {
         return hand.getHand().stream().map(Card::getSuit).distinct().collect(Collectors.toList());
     }
 
+    private List<Integer> getDistinctRanks(Hand hand) {
+        return hand.getHand().stream().map(Card::getRank).distinct().collect(Collectors.toList());
+    }
+
     private List<Card> getCardsBySuit(Hand hand, Suit suit) {
         return hand.getHand().stream().filter(card -> card.getSuit() == suit).collect(Collectors.toList());
     }
 
-    public boolean cardHelpsPlayer(Player player, Card card) throws InvalidHandException, InvalidCardException {
-        Hand playerHand = player.getHand();
-        generateHandComponents(player.getHand(), round);
+    public boolean cardHelpsPlayer(Player player, Card card, int round) throws InvalidHandException, InvalidCardException {
+        List<Card> playerHand = new ArrayList<>(player.getHand().getHand());
+        Hand playerHandCopy = new Hand(playerHand);
+
+        generateHandComponents(playerHandCopy, this.round);
         int initTerciaComponentWeight = terciaPossibles.size();
         int initRunsComponentWeight = runPossibles.size();
 
-        playerHand.addToHand(card);
-        generateHandComponents(playerHand,round);
+        playerHandCopy.addToHand(card);
+        generateHandComponents(playerHandCopy, this.round);
         int newTerciaComponentWeight = terciaPossibles.size();
         int newRunsComponentWeight = runPossibles.size();
 
+        if (roundNeedsOnlyTercias(round)) {
+            return initTerciaComponentWeight < newTerciaComponentWeight;
+        } else if (roundNeedsOnlyRuns(round)) {
+            return initRunsComponentWeight < newRunsComponentWeight;
+        }
         return initTerciaComponentWeight < newTerciaComponentWeight || initRunsComponentWeight < newRunsComponentWeight;
     }
 }
