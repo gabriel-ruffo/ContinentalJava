@@ -27,6 +27,9 @@ public class GameRunner {
     private int round;
     private final HandAnalyzer handAnalyzer;
     private boolean discardCardHasBeenGrabbed = false;
+    private boolean roundWon = false;
+
+    private final Logger GAME_RUNNER_LOGGER = LogManager.getLogger(GameRunner.class);
 
     public GameRunner() {
         gameController = new GameController();
@@ -39,9 +42,13 @@ public class GameRunner {
 
     public void play() throws GeneralGameException {
         setupRound();
-        for (Player player : players) {
-            playTurn(player);
+        while (!roundWon) {
+            for (Player player : players) {
+                playTurn(player);
+                if (roundWon) break;
+            }
         }
+        roundWon = false;
     }
 
     public void addPlayer(Player player) {
@@ -65,6 +72,7 @@ public class GameRunner {
         if (gameController.checkHandForWinCondition(player.getHand(), round)) {
             // TODO: implement goDown() -- don't win unless all cards in hand are gone
             System.out.println(player + " wins round " + round + "!");
+            roundWon = true;
             round++;
         } else {
             discardCard(player);
@@ -105,6 +113,7 @@ public class GameRunner {
 
     private void checkForOutOfTurn(Player drawPlayer, Player player) throws InvalidPlayerException, InvalidRoundException {
         if (!drawPlayer.equals(player)) {
+            GAME_RUNNER_LOGGER.info(drawPlayer + " grabbed out of turn.");
             deck.dealToPlayer(drawPlayer, 1);
         }
     }

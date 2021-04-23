@@ -1,9 +1,4 @@
 import exceptions.GeneralGameException;
-import exceptions.card.InvalidCardException;
-import exceptions.deck.InvalidDeckException;
-import exceptions.game.InvalidRoundException;
-import exceptions.hand.InvalidHandException;
-import exceptions.player.InvalidPlayerException;
 import model.Player;
 import runner.GameRunner;
 

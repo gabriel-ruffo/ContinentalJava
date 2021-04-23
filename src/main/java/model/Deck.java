@@ -51,7 +51,7 @@ public class Deck {
         Card card = deck.get(0);
         deck.remove(0);
 
-        DECK_LOGGER.info("Dealing Card: " + card.toString());
+        DECK_LOGGER.info("Dealt: " + card.toString());
 
         return card;
     }
@@ -73,6 +73,8 @@ public class Deck {
         if (player == null) {
             throw new InvalidPlayerException("Player can't be null");
         }
+
+        DECK_LOGGER.info("Dealing to " + player + " " + round + " card(s)");
 
         IntStream.range(0, round).forEach($ ->
         {

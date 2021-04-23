@@ -15,7 +15,6 @@ public class HandAnalyzer {
     private List<Card> terciaPossibles;
     private List<Card> runPossibles;
     private List<Card> flexCards;
-
     private List<List<Card>> perfectTercias;
     private List<List<Card>> incompleteTercias;
     private List<List<Card>> overflowTercias;
@@ -83,6 +82,18 @@ public class HandAnalyzer {
 
     public List<Card> getFlexCards() {
         return flexCards;
+    }
+
+    public List<List<Card>> getPerfectTercias() {
+        return perfectTercias;
+    }
+
+    public List<List<Card>> getIncompleteTercias() {
+        return incompleteTercias;
+    }
+
+    public List<List<Card>> getOverflowTercias() {
+        return overflowTercias;
     }
 
     private void generateTerciaComponent(Hand hand) {

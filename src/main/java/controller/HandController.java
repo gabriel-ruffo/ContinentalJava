@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class HandController {
     private final HandAnalyzer handAnalyzer = new HandAnalyzer();
@@ -35,6 +36,17 @@ public class HandController {
             // all cards are necessary, get rid of next least useful card
             if (roundNeedsOnlyTercias(round)) {
                 handAnalyzer.generateTerciaTypes(hand);
+                List<List<Card>> overflowTercias = handAnalyzer.getOverflowTercias();
+                List<List<Card>> incompleteTercias = handAnalyzer.getIncompleteTercias();
+                List<List<Card>> perfectTercias = handAnalyzer.getPerfectTercias();
+
+                if (overflowTercias.size() > 0) {
+                    discardCard = discardFromSpecialTercia(overflowTercias);
+                } else if (incompleteTercias.size() > 0) {
+                    discardCard = discardFromSpecialTercia(incompleteTercias);
+                } else if (perfectTercias.size() > 0) {
+                    discardCard = discardFromSpecialTercia(perfectTercias);
+                }
             } else if (roundNeedsOnlyRuns(round)) {
 
             } else {
@@ -44,6 +56,18 @@ public class HandController {
 
         hand.removeFromHand(discardCard);
         return discardCard;
+    }
+
+    private Card discardFromSpecialTercia(List<List<Card>> terciaType) {
+        if (terciaType.size() == 1) {
+            return terciaType.get(0).get(0);
+        } else {
+            List<Card> terciaTypeSamples = new ArrayList<>();
+            for(List<Card> terciaTypeList : terciaType) {
+                terciaTypeSamples.add(terciaTypeList.get(0));
+            }
+            return new Hand(terciaTypeSamples).getHighestPointCard();
+        }
     }
 
     private boolean roundNeedsOnlyTercias(int round) {

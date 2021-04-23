@@ -54,6 +54,7 @@ public class Hand {
         return (int) hand.stream().filter(predicateCard -> predicateCard.getSuit() == card.getSuit()).count();
     }
 
+    // Note: returns first card from stream
     public Card getHighestPointCard() {
         return hand.stream().max(Comparator.comparingInt(Card::getPoints)).get();
     }
