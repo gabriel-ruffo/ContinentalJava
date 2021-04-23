@@ -1,9 +1,34 @@
 package controller;
 
 import exceptions.card.InvalidCardException;
+import exceptions.deck.InvalidDeckException;
+import exceptions.game.InvalidRoundException;
+import exceptions.hand.InvalidHandException;
+import exceptions.player.InvalidPlayerException;
+import model.Deck;
 import model.Hand;
+import model.Player;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.List;
 
 public class GameController {
+    private final Deck deck;
+    private final Deck discardPile;
+    private final List<Player> players;
+    private final HandAnalyzer handAnalyzer;
+
+    private boolean discardCardHasBeenGrabbed = false;
+
+    private final Logger GAME_CONTROLLER_LOGGER = LogManager.getLogger(GameController.class);
+
+    public GameController(List<Player> players) {
+        deck = new Deck();
+        discardPile = new Deck();
+        this.players = players;
+        handAnalyzer = new HandAnalyzer();
+    }
     /*
     TODO: Rules to implement
         1. Can't have a Tercia with more than one Joker
@@ -32,5 +57,59 @@ public class GameController {
 //                throw new InvalidWinCondition(round + " is not a valid hand.");
         }
         return false;
+    }
+
+    public void setupRound(int round) throws InvalidPlayerException, InvalidRoundException, InvalidCardException {
+        GAME_CONTROLLER_LOGGER.info("Setting up round: " + round);
+        dealCards(round);
+    }
+
+    private void dealCards(int round) throws InvalidCardException, InvalidPlayerException, InvalidRoundException {
+        GAME_CONTROLLER_LOGGER.info("Dealing cards to players");
+        deck.reinitialize();
+
+        for (Player player : players) {
+            deck.dealToPlayer(player, round);
+            player.getHand().sortHand();
+        }
+    }
+
+    public void drawCard(Player player, int round) throws InvalidPlayerException, InvalidRoundException, InvalidDeckException, InvalidHandException, InvalidCardException {
+        if (!discardCardHasBeenGrabbed && discardPile.getDeck().size() > 0) {
+            if (!checkDiscardCardDesirability(player, round)) {
+                deck.dealToPlayer(player, 1);
+            }
+        } else {
+            deck.dealToPlayer(player, 1);
+        }
+        player.getHand().sortHand();
+    }
+
+    private boolean checkDiscardCardDesirability(Player player, int round) throws InvalidDeckException, InvalidPlayerException,
+            InvalidRoundException, InvalidHandException, InvalidCardException {
+        for (Player drawPlayer : players) {
+            if (handAnalyzer.cardHelpsPlayer(drawPlayer, discardPile.peekCard(), round)) {
+                GAME_CONTROLLER_LOGGER.info(drawPlayer + " is grabbing " + discardPile.peekCard() + " from discard pile");
+                discardPile.dealToPlayer(drawPlayer, 1);
+                checkForOutOfTurn(drawPlayer, player);
+                discardCardHasBeenGrabbed = true;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void checkForOutOfTurn(Player drawPlayer, Player player) throws InvalidPlayerException, InvalidRoundException {
+        if (!drawPlayer.equals(player)) {
+            GAME_CONTROLLER_LOGGER.info(drawPlayer + " grabbed out of turn, dealing additional card from top deck");
+            deck.dealToPlayer(drawPlayer, 1);
+        }
+    }
+
+    public void discardCard(Player player, int round) throws InvalidHandException, InvalidCardException {
+        HandController handController = new HandController();
+        discardPile.getDeck().add(
+                handController.discardWorstCard(player.getHand(), round));
+        discardCardHasBeenGrabbed = false;
     }
 }

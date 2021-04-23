@@ -2,13 +2,17 @@ import exceptions.GeneralGameException;
 import model.Player;
 import runner.GameRunner;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) throws GeneralGameException {
-        GameRunner gameRunner = new GameRunner();
+        List<Player> players = new ArrayList<>();
+        players.add(new Player("Player1"));
+        players.add(new Player("Player2"));
+        players.add(new Player("Player3"));
 
-        gameRunner.addPlayer(new Player("Player1"));
-        gameRunner.addPlayer(new Player("Player2"));
-        gameRunner.addPlayer(new Player("Player3"));
+        GameRunner gameRunner = new GameRunner(players);
 
         gameRunner.play();
     }

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 
 public class GameControllerTest {
-    GameController gameController = new GameController();
+    GameController gameController = new GameController(null);
 
     @Test
     public void test_FirstHandSuccessful() throws InvalidCardException {
