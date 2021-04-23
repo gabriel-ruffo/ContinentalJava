@@ -68,16 +68,19 @@ public class GameRunner {
         2.a. If win: drop card groupings and discard if necessary
         2.b. If no win: discard card
          */
+        GAME_RUNNER_LOGGER.info(player + "'s hand: " + player.getHand().toString());
         drawCard(player);
         if (gameController.checkHandForWinCondition(player.getHand(), round)) {
             // TODO: implement goDown() -- don't win unless all cards in hand are gone
-            System.out.println(player + " wins round " + round + "!");
+            GAME_RUNNER_LOGGER.info(player + " wins round " + round + "!");
             roundWon = true;
             round++;
         } else {
             discardCard(player);
             discardCardHasBeenGrabbed = false;
         }
+        GAME_RUNNER_LOGGER.info(player + "'s hand: " + player.getHand().toString());
+        System.out.println("===============================================================");
     }
 
     private void discardCard(Player player) throws InvalidHandException, InvalidCardException {
@@ -124,6 +127,7 @@ public class GameRunner {
 
         for (Player player : players) {
             deck.dealToPlayer(player, round);
+            player.getHand().sortHand();
         }
     }
 

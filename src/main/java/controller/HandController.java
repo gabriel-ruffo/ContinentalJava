@@ -36,16 +36,13 @@ public class HandController {
             // all cards are necessary, get rid of next least useful card
             if (roundNeedsOnlyTercias(round)) {
                 handAnalyzer.generateTerciaTypes(hand);
-                List<List<Card>> overflowTercias = handAnalyzer.getOverflowTercias();
-                List<List<Card>> incompleteTercias = handAnalyzer.getIncompleteTercias();
-                List<List<Card>> perfectTercias = handAnalyzer.getPerfectTercias();
 
-                if (overflowTercias.size() > 0) {
-                    discardCard = discardFromSpecialTercia(overflowTercias);
-                } else if (incompleteTercias.size() > 0) {
-                    discardCard = discardFromSpecialTercia(incompleteTercias);
-                } else if (perfectTercias.size() > 0) {
-                    discardCard = discardFromSpecialTercia(perfectTercias);
+                if (handAnalyzer.getOverflowTercias().size() > 0) {
+                    discardCard = discardFromSpecialTercia(handAnalyzer.getOverflowTercias());
+                } else if (handAnalyzer.getIncompleteTercias().size() > 0) {
+                    discardCard = discardFromSpecialTercia(handAnalyzer.getIncompleteTercias());
+                } else if (handAnalyzer.getPerfectTercias().size() > 0) {
+                    discardCard = discardFromSpecialTercia(handAnalyzer.getPerfectTercias());
                 }
             } else if (roundNeedsOnlyRuns(round)) {
 
