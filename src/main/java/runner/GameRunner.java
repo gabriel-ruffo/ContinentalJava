@@ -105,6 +105,7 @@ public class GameRunner {
             InvalidRoundException, InvalidHandException, InvalidCardException {
         for (Player drawPlayer : players) {
             if (handAnalyzer.cardHelpsPlayer(drawPlayer, discardPile.peekCard(), round)) {
+                GAME_RUNNER_LOGGER.info(drawPlayer + " is grabbing " + discardPile.peekCard() + " from discard pile");
                 discardPile.dealToPlayer(drawPlayer, 1);
                 checkForOutOfTurn(drawPlayer, player);
                 discardCardHasBeenGrabbed = true;
@@ -116,7 +117,7 @@ public class GameRunner {
 
     private void checkForOutOfTurn(Player drawPlayer, Player player) throws InvalidPlayerException, InvalidRoundException {
         if (!drawPlayer.equals(player)) {
-            GAME_RUNNER_LOGGER.info(drawPlayer + " grabbed out of turn.");
+            GAME_RUNNER_LOGGER.info(drawPlayer + " grabbed out of turn, dealing additional card from top deck");
             deck.dealToPlayer(drawPlayer, 1);
         }
     }

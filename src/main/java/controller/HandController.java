@@ -31,7 +31,6 @@ public class HandController {
         // there exist unnecessary cards in hand
         if (handCopy.size() > 0) {
             discardCard = new Hand(handCopy).getHighestPointCard();
-            HAND_CONTROLLER_LOGGER.info("Discarded card: " + discardCard.toString());
         } else {
             // all cards are necessary, get rid of next least useful card
             if (roundNeedsOnlyTercias(round)) {
