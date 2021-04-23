@@ -51,6 +51,9 @@ public class HandController {
             }
         }
 
+        if (discardCard != null)
+            HAND_CONTROLLER_LOGGER.info("Discarded card: " + discardCard);
+
         hand.removeFromHand(discardCard);
         return discardCard;
     }

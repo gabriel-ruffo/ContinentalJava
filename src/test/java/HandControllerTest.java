@@ -34,6 +34,29 @@ public class HandControllerTest {
     }
 
     @Test
+    public void testDiscardBug() throws InvalidCardException, InvalidHandException {
+        List<Card> cards = new ArrayList<>();
+        Collections.addAll(cards,
+                new Card(Suit.HEART, 2),
+                new Card(Suit.SPADE, 2),
+                new Card(Suit.DIAMOND, 2),
+                new Card(Suit.CLUB, 5),
+                new Card(Suit.DIAMOND, 7),
+                new Card(Suit.DIAMOND, 7),
+                new Card(Suit.HEART, 11),
+                new Card(Suit.SPADE, 11));
+        Hand hand = new Hand(cards);
+
+        System.out.println(hand);
+        cards.add(new Card(Suit.DIAMOND, 5));
+        System.out.println(hand);
+        Card discardedCard = handController.discardWorstCard(hand, 6);
+        System.out.println(discardedCard);
+        System.out.println(hand);
+        assertEquals(10, discardedCard.getPoints());
+    }
+
+    @Test
     public void testDiscardFivePointFromUselessHand() throws InvalidHandException, InvalidCardException {
         List<Card> cards = new ArrayList<>();
         Collections.addAll(cards,

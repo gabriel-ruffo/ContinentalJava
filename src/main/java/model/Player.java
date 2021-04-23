@@ -10,15 +10,18 @@ public class Player {
 
     private int points;
     private Hand hand;
+    private final String name;
 
-    public Player() {
+    public Player(String name) {
         points = 0;
         hand = new Hand();
+        this.name = name;
     }
 
-    public Player(int points, Hand hand) {
+    public Player(int points, Hand hand, String name) {
         this.points = points;
         this.hand = hand;
+        this.name = name;
     }
 
     public int getPoints() {
@@ -44,6 +47,13 @@ public class Player {
 
     public Hand getHand() {
         return this.hand;
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "name='" + name + '\'' +
+                " points=" + points + '}';
     }
 
 }
