@@ -64,17 +64,8 @@ public class GameController {
         dealCards(round);
     }
 
-    private void dealCards(int round) throws InvalidCardException, InvalidPlayerException, InvalidRoundException {
-        GAME_CONTROLLER_LOGGER.info("Dealing cards to players");
-        deck.reinitialize();
-
-        for (Player player : players) {
-            deck.dealToPlayer(player, round);
-            player.getHand().sortHand();
-        }
-    }
-
-    public void drawCard(Player player, int round) throws InvalidPlayerException, InvalidRoundException, InvalidDeckException, InvalidHandException, InvalidCardException {
+    public void drawCard(Player player, int round) throws InvalidPlayerException, InvalidRoundException,
+            InvalidDeckException, InvalidHandException, InvalidCardException {
         if (!discardCardHasBeenGrabbed && discardPile.getDeck().size() > 0) {
             if (!checkDiscardCardDesirability(player, round)) {
                 deck.dealToPlayer(player, 1);
@@ -83,6 +74,39 @@ public class GameController {
             deck.dealToPlayer(player, 1);
         }
         player.getHand().sortHand();
+    }
+
+    public void discardCard(Player player, int round) throws InvalidHandException, InvalidCardException {
+        HandController handController = new HandController();
+        discardPile.getDeck().add(
+                handController.discardWorstCard(player.getHand(), round));
+        discardCardHasBeenGrabbed = false;
+    }
+
+    public void goDown(Player player, int round) throws InvalidCardException {
+        // generate tercia types
+        // place down in order: overflow, perfect, incompletes with flex card completion
+        // if overflow has 6+ cards and no perfect and no incompletes with flex card completion, split overflow
+        // set hasGoneDown to true -- remember to turn to false when starting new round
+        handAnalyzer.generateTerciaTypes(player.getHand());
+
+        if (handAnalyzer.getPerfectTercias().size() == 2) {
+            player.setHasGoneDown(true);
+        } else if (handAnalyzer.getOverflowTercias().size() == 2) {
+            player.setHasGoneDown(true);
+        } else if (handAnalyzer.getIncompleteTercias().size() == 2 && handAnalyzer.getJokerCount(player.getHand()) == 2) {
+            player.setHasGoneDown(true);
+        }
+    }
+
+    private void dealCards(int round) throws InvalidCardException, InvalidPlayerException, InvalidRoundException {
+        GAME_CONTROLLER_LOGGER.info("Dealing cards to players");
+        deck.reinitialize();
+
+        for (Player player : players) {
+            deck.dealToPlayer(player, round);
+            player.getHand().sortHand();
+        }
     }
 
     private boolean checkDiscardCardDesirability(Player player, int round) throws InvalidDeckException, InvalidPlayerException,
@@ -106,10 +130,4 @@ public class GameController {
         }
     }
 
-    public void discardCard(Player player, int round) throws InvalidHandException, InvalidCardException {
-        HandController handController = new HandController();
-        discardPile.getDeck().add(
-                handController.discardWorstCard(player.getHand(), round));
-        discardCardHasBeenGrabbed = false;
-    }
 }

@@ -2,6 +2,7 @@ import controller.GameController;
 import exceptions.card.InvalidCardException;
 import model.Card;
 import model.Hand;
+import model.Player;
 import model.Suit;
 import org.junit.Test;
 
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 
 public class GameControllerTest {
-    GameController gameController = new GameController(null);
+    private final GameController gameController = new GameController(null);
 
     @Test
     public void test_FirstHandSuccessful() throws InvalidCardException {
@@ -244,6 +245,62 @@ public class GameControllerTest {
         Hand fourTercias = new Hand(cards);
 
         assertFalse(gameController.checkHandForWinCondition(fourTercias, 12));
+    }
+
+    @Test
+    public void testGoDownPerfectHand() throws InvalidCardException {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+
+        Hand twoPerfectTercias = new Hand(cards);
+        Player player = new Player(0, twoPerfectTercias, "player");
+
+        gameController.goDown(player, 6);
+
+        assertTrue(player.getHasGoneDown());
+    }
+
+    @Test
+    public void testGoDownTwoOverflows() throws InvalidCardException {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+
+        Hand twoOverflowTercias = new Hand(cards);
+        Player player = new Player(0, twoOverflowTercias, "player");
+
+        gameController.goDown(player, 6);
+
+        assertTrue(player.getHasGoneDown());
+    }
+
+    @Test
+    public void testGoDownTwoIncompletesWithJokers() throws InvalidCardException {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(Suit.JOKER, -1));
+        cards.add(new Card(Suit.JOKER, -1));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));;
+
+        Hand twoIncompleteTercias = new Hand(cards);
+        Player player = new Player(0, twoIncompleteTercias, "player");
+
+        gameController.goDown(player, 6);
+
+        assertTrue(player.getHasGoneDown());
     }
 
 }

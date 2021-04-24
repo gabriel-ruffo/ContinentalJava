@@ -11,11 +11,15 @@ public class Player {
     private int points;
     private Hand hand;
     private final String name;
+    private Hand downedHand;
+    private boolean hasGoneDown;
 
     public Player(String name) {
         points = 0;
         hand = new Hand();
         this.name = name;
+        downedHand = new Hand();
+        hasGoneDown = false;
     }
 
     public Player(int points, Hand hand, String name) {
@@ -47,6 +51,18 @@ public class Player {
 
     public Hand getHand() {
         return this.hand;
+    }
+
+    public Hand getDownedHand() {
+        return downedHand;
+    }
+
+    public boolean getHasGoneDown() {
+        return hasGoneDown;
+    }
+
+    public void setHasGoneDown(boolean hasGoneDown) {
+        this.hasGoneDown = hasGoneDown;
     }
 
     @Override

@@ -28,7 +28,7 @@ public class HandAnalyzer {
         }
         this.round = round;
         initLists();
-        jokerCount = hand.getCardCountBySuit(new Card(Suit.JOKER, -1));
+        jokerCount = getJokerCount(hand);
 
         if (roundNeedsOnlyTercias(round)) {
             generateTerciaComponent(hand);
@@ -42,8 +42,13 @@ public class HandAnalyzer {
     }
 
     public void generateTerciaTypes(Hand hand) {
+        initLists();
         List<Integer> distinctRanks = getDistinctRanks(hand);
+
         for (int rank : distinctRanks) {
+            if (rank == -1) {
+                continue;
+            }
             List<Card> cardsByRank = hand.getHand().stream().filter(card -> card.getRank() == rank).collect(Collectors.toList());
             if (cardsByRank.size() == 2) {
                 incompleteTercias.add(cardsByRank);
@@ -53,6 +58,27 @@ public class HandAnalyzer {
                 overflowTercias.add(cardsByRank);
             }
         }
+    }
+
+    public boolean cardHelpsPlayer(Player player, Card card, int round) throws InvalidHandException, InvalidCardException {
+        List<Card> playerHand = new ArrayList<>(player.getHand().getHand());
+        Hand playerHandCopy = new Hand(playerHand);
+
+        generateHandComponents(playerHandCopy, this.round);
+        int initTerciaComponentWeight = terciaPossibles.size();
+        int initRunsComponentWeight = runPossibles.size();
+
+        playerHandCopy.addToHand(card);
+        generateHandComponents(playerHandCopy, this.round);
+        int newTerciaComponentWeight = terciaPossibles.size();
+        int newRunsComponentWeight = runPossibles.size();
+
+        if (roundNeedsOnlyTercias(round)) {
+            return initTerciaComponentWeight < newTerciaComponentWeight;
+        } else if (roundNeedsOnlyRuns(round)) {
+            return initRunsComponentWeight < newRunsComponentWeight;
+        }
+        return initTerciaComponentWeight < newTerciaComponentWeight || initRunsComponentWeight < newRunsComponentWeight;
     }
 
     private boolean roundNeedsOnlyTercias(int round) {
@@ -70,30 +96,6 @@ public class HandAnalyzer {
         perfectTercias = new ArrayList<>();
         incompleteTercias = new ArrayList<>();
         overflowTercias = new ArrayList<>();
-    }
-
-    public List<Card> getTerciaPossibles() {
-        return terciaPossibles;
-    }
-
-    public List<Card> getRunPossibles() {
-        return runPossibles;
-    }
-
-    public List<Card> getFlexCards() {
-        return flexCards;
-    }
-
-    public List<List<Card>> getPerfectTercias() {
-        return perfectTercias;
-    }
-
-    public List<List<Card>> getIncompleteTercias() {
-        return incompleteTercias;
-    }
-
-    public List<List<Card>> getOverflowTercias() {
-        return overflowTercias;
     }
 
     private void generateTerciaComponent(Hand hand) {
@@ -163,6 +165,10 @@ public class HandAnalyzer {
         }
     }
 
+    public int getJokerCount(Hand hand) throws InvalidCardException {
+        return hand.getCardCountBySuit(new Card(Suit.JOKER, -1));
+    }
+
     private List<Suit> getDistinctSuits(Hand hand) {
         return hand.getHand().stream().map(Card::getSuit).distinct().collect(Collectors.toList());
     }
@@ -175,24 +181,27 @@ public class HandAnalyzer {
         return hand.getHand().stream().filter(card -> card.getSuit() == suit).collect(Collectors.toList());
     }
 
-    public boolean cardHelpsPlayer(Player player, Card card, int round) throws InvalidHandException, InvalidCardException {
-        List<Card> playerHand = new ArrayList<>(player.getHand().getHand());
-        Hand playerHandCopy = new Hand(playerHand);
+    public List<Card> getTerciaPossibles() {
+        return terciaPossibles;
+    }
 
-        generateHandComponents(playerHandCopy, this.round);
-        int initTerciaComponentWeight = terciaPossibles.size();
-        int initRunsComponentWeight = runPossibles.size();
+    public List<Card> getRunPossibles() {
+        return runPossibles;
+    }
 
-        playerHandCopy.addToHand(card);
-        generateHandComponents(playerHandCopy, this.round);
-        int newTerciaComponentWeight = terciaPossibles.size();
-        int newRunsComponentWeight = runPossibles.size();
+    public List<Card> getFlexCards() {
+        return flexCards;
+    }
 
-        if (roundNeedsOnlyTercias(round)) {
-            return initTerciaComponentWeight < newTerciaComponentWeight;
-        } else if (roundNeedsOnlyRuns(round)) {
-            return initRunsComponentWeight < newRunsComponentWeight;
-        }
-        return initTerciaComponentWeight < newTerciaComponentWeight || initRunsComponentWeight < newRunsComponentWeight;
+    public List<List<Card>> getPerfectTercias() {
+        return perfectTercias;
+    }
+
+    public List<List<Card>> getIncompleteTercias() {
+        return incompleteTercias;
+    }
+
+    public List<List<Card>> getOverflowTercias() {
+        return overflowTercias;
     }
 }
