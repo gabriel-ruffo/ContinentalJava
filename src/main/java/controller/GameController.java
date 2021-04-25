@@ -5,12 +5,14 @@ import exceptions.deck.InvalidDeckException;
 import exceptions.game.InvalidRoundException;
 import exceptions.hand.InvalidHandException;
 import exceptions.player.InvalidPlayerException;
+import model.Card;
 import model.Deck;
 import model.Hand;
 import model.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameController {
@@ -29,6 +31,7 @@ public class GameController {
         this.players = players;
         handAnalyzer = new HandAnalyzer();
     }
+
     /*
     TODO: Rules to implement
         1. Can't have a Tercia with more than one Joker
@@ -83,20 +86,45 @@ public class GameController {
         discardCardHasBeenGrabbed = false;
     }
 
-    public void goDown(Player player, int round) throws InvalidCardException {
+    public void goDown(Player player, int round) throws InvalidCardException, InvalidHandException {
         // generate tercia types
         // place down in order: overflow, perfect, incompletes with flex card completion
         // if overflow has 6+ cards and no perfect and no incompletes with flex card completion, split overflow
         // set hasGoneDown to true -- remember to turn to false when starting new round
         handAnalyzer.generateTerciaTypes(player.getHand());
 
-        if (handAnalyzer.getPerfectTercias().size() == 2) {
-            player.setHasGoneDown(true);
-        } else if (handAnalyzer.getOverflowTercias().size() == 2) {
-            player.setHasGoneDown(true);
-        } else if (handAnalyzer.getIncompleteTercias().size() == 2 && handAnalyzer.getJokerCount(player.getHand()) == 2) {
-            player.setHasGoneDown(true);
+        if (handAnalyzer.roundNeedsOnlyTercias(round)) {
+            int neededTercias = round / 3;
+            int validTerciasCount = handAnalyzer.getPerfectTercias().size() + handAnalyzer.getOverflowTercias().size();
+            if (handAnalyzer.getIncompleteTercias().size() > 0 &&
+                    handAnalyzer.getIncompleteTercias().size() == handAnalyzer.getJokerCount(player.getHand())) {
+                validTerciasCount += handAnalyzer.getIncompleteTercias().size();
+            }
+            if (validTerciasCount >= neededTercias) {
+                moveCardsToDownedHand(handAnalyzer, player);
+                player.setHasGoneDown(true);
+                if (player.getHand().getHand().size() == 0) {
+                    player.setHasWon(true);
+                }
+            }
         }
+    }
+
+    private void moveCardsToDownedHand(HandAnalyzer handAnalyzer, Player player) {
+        List<List<List<Card>>> allTerciaTypesList = new ArrayList<>();
+        allTerciaTypesList.add(handAnalyzer.getOverflowTercias());
+        allTerciaTypesList.add(handAnalyzer.getIncompleteTercias());
+        allTerciaTypesList.add(handAnalyzer.getPerfectTercias());
+
+        for (List<List<Card>> terciaTypeList : allTerciaTypesList) {
+            for (List<Card> tercia : terciaTypeList) {
+                player.getHand().removeCardsFromHand(tercia);
+                player.getDownedHand().add(new Hand(tercia));
+            }
+        }
+
+        player.getHand().removeCardsFromHand(handAnalyzer.getJokers(player.getHand()));
+        player.getDownedHand().add(new Hand(handAnalyzer.getJokers(player.getHand())));
     }
 
     private void dealCards(int round) throws InvalidCardException, InvalidPlayerException, InvalidRoundException {

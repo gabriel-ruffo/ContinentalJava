@@ -4,6 +4,9 @@ import exceptions.points.InvalidPointsException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Player {
 
     private final Logger PLAYER_LOGGER = LogManager.getLogger(Player.class);
@@ -11,21 +14,26 @@ public class Player {
     private int points;
     private Hand hand;
     private final String name;
-    private Hand downedHand;
+    private List<Hand> downedHand;
     private boolean hasGoneDown;
+    private boolean hasWon;
 
     public Player(String name) {
         points = 0;
         hand = new Hand();
         this.name = name;
-        downedHand = new Hand();
+        downedHand = new ArrayList<>();
         hasGoneDown = false;
+        hasWon = false;
     }
 
     public Player(int points, Hand hand, String name) {
         this.points = points;
         this.hand = hand;
         this.name = name;
+        downedHand = new ArrayList<>();
+        hasGoneDown = false;
+        hasWon = false;
     }
 
     public int getPoints() {
@@ -41,10 +49,6 @@ public class Player {
         }
     }
 
-    private boolean pointsAreValid(int points) {
-        return points % 5 == 0;
-    }
-
     public void setHand(Hand hand) {
         this.hand = hand;
     }
@@ -53,7 +57,7 @@ public class Player {
         return this.hand;
     }
 
-    public Hand getDownedHand() {
+    public List<Hand> getDownedHand() {
         return downedHand;
     }
 
@@ -63,6 +67,18 @@ public class Player {
 
     public void setHasGoneDown(boolean hasGoneDown) {
         this.hasGoneDown = hasGoneDown;
+    }
+
+    public void setHasWon(boolean hasWon) {
+        this.hasWon = hasWon;
+    }
+
+    public boolean getHasWon() {
+        return hasWon;
+    }
+
+    private boolean pointsAreValid(int points) {
+        return points % 5 == 0;
     }
 
     @Override

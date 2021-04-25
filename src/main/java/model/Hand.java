@@ -34,6 +34,10 @@ public class Hand {
         return false;
     }
 
+    public void removeCardsFromHand(List<Card> cards) {
+        hand.removeAll(cards);
+    }
+
     public void sortHand() {
         hand.sort(Comparator.comparing(Card::getRank));
     }

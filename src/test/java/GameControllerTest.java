@@ -1,5 +1,6 @@
 import controller.GameController;
 import exceptions.card.InvalidCardException;
+import exceptions.hand.InvalidHandException;
 import model.Card;
 import model.Hand;
 import model.Player;
@@ -248,7 +249,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void testGoDownPerfectHand() throws InvalidCardException {
+    public void testGoDownPerfectHand() throws InvalidCardException, InvalidHandException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 2));
         cards.add(new Card(Suit.CLUB, 2));
@@ -263,10 +264,11 @@ public class GameControllerTest {
         gameController.goDown(player, 6);
 
         assertTrue(player.getHasGoneDown());
+        assertTrue(player.getHasWon());
     }
 
     @Test
-    public void testGoDownTwoOverflows() throws InvalidCardException {
+    public void testGoDownTwoOverflows() throws InvalidCardException, InvalidHandException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 2));
         cards.add(new Card(Suit.CLUB, 2));
@@ -283,10 +285,11 @@ public class GameControllerTest {
         gameController.goDown(player, 6);
 
         assertTrue(player.getHasGoneDown());
+        assertTrue(player.getHasWon());
     }
 
     @Test
-    public void testGoDownTwoIncompletesWithJokers() throws InvalidCardException {
+    public void testGoDownTwoIncompletesWithJokers() throws InvalidCardException, InvalidHandException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.JOKER, -1));
         cards.add(new Card(Suit.JOKER, -1));
@@ -301,6 +304,198 @@ public class GameControllerTest {
         gameController.goDown(player, 6);
 
         assertTrue(player.getHasGoneDown());
+        assertTrue(player.getHasWon());
+    }
+
+    @Test
+    public void testGoDownPerfectAndOverflowNoExtras() throws InvalidCardException, InvalidHandException {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+
+        Hand perfectAndOverflow = new Hand(cards);
+        Player player = new Player(0, perfectAndOverflow, "player");
+
+        gameController.goDown(player, 6);
+
+        assertTrue(player.getHasGoneDown());
+        assertTrue(player.getHasWon());
+    }
+
+    @Test
+    public void testGoDownPerfectAndIncompleteWithJokerNoExtras() throws InvalidCardException, InvalidHandException {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(Suit.JOKER, -1));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+
+        Hand perfectAndIncomplete = new Hand(cards);
+        Player player = new Player(0, perfectAndIncomplete, "player");
+
+        gameController.goDown(player, 6);
+
+        assertTrue(player.getHasGoneDown());
+        assertTrue(player.getHasWon());
+    }
+
+    @Test
+    public void testGoDownOverflowAndIncompleteWithJokerNoExtras() throws InvalidCardException, InvalidHandException {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(Suit.JOKER, -1));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+
+        Hand overflowAndIncomplete = new Hand(cards);
+        Player player = new Player(0, overflowAndIncomplete, "player");
+
+        gameController.goDown(player, 6);
+
+        assertTrue(player.getHasGoneDown());
+        assertTrue(player.getHasWon());
+    }
+
+    @Test
+    public void testGoDownTwoPerfectWithExtras() throws InvalidCardException, InvalidHandException {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 12));
+
+        Hand twoPerfectTercias = new Hand(cards);
+        Player player = new Player(0, twoPerfectTercias, "player");
+
+        gameController.goDown(player, 6);
+
+        assertTrue(player.getHasGoneDown());
+        assertFalse(player.getHasWon());
+        assertEquals(new Card(Suit.CLUB, 12), player.getHand().getHand().get(0));
+    }
+
+    @Test
+    public void testGoDownTwoOverflowsWithExtras() throws InvalidCardException, InvalidHandException {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 11));
+        cards.add(new Card(Suit.CLUB, 12));
+
+        Hand twoOverflowTercias = new Hand(cards);
+        Player player = new Player(0, twoOverflowTercias, "player");
+
+        gameController.goDown(player, 6);
+
+        assertTrue(player.getHasGoneDown());
+        assertFalse(player.getHasWon());
+        assertEquals(new Card(Suit.CLUB, 11), player.getHand().getHand().get(0));
+        assertEquals(new Card(Suit.CLUB, 12), player.getHand().getHand().get(1));
+    }
+
+    @Test
+    public void testGoDownTwoIncompletesWithJokersWithExtras() throws InvalidCardException, InvalidHandException {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(Suit.JOKER, -1));
+        cards.add(new Card(Suit.JOKER, -1));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 13));
+
+        Hand twoIncompleteTercias = new Hand(cards);
+        Player player = new Player(0, twoIncompleteTercias, "player");
+
+        gameController.goDown(player, 6);
+
+        assertTrue(player.getHasGoneDown());
+        assertFalse(player.getHasWon());
+        assertEquals(new Card(Suit.CLUB, 13), player.getHand().getHand().get(0));
+    }
+
+    @Test
+    public void testGoDownPerfectAndOverflowWithExtras() throws InvalidCardException, InvalidHandException {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 11));
+
+        Hand perfectAndOverflow = new Hand(cards);
+        Player player = new Player(0, perfectAndOverflow, "player");
+
+        gameController.goDown(player, 6);
+
+        assertTrue(player.getHasGoneDown());
+        assertFalse(player.getHasWon());
+        assertEquals(new Card(Suit.CLUB, 11), player.getHand().getHand().get(0));
+    }
+
+    @Test
+    public void testGoDownPerfectAndIncompleteWithJokerWithExtras() throws InvalidCardException, InvalidHandException {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(Suit.JOKER, -1));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 11));
+
+        Hand perfectAndIncomplete = new Hand(cards);
+        Player player = new Player(0, perfectAndIncomplete, "player");
+
+        gameController.goDown(player, 6);
+
+        assertTrue(player.getHasGoneDown());
+        assertFalse(player.getHasWon());
+        assertEquals(new Card(Suit.CLUB, 11), player.getHand().getHand().get(0));
+    }
+
+    @Test
+    public void testGoDownOverflowAndIncompleteWithJokerWithExtras() throws InvalidCardException, InvalidHandException {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(Suit.JOKER, -1));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 2));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 10));
+        cards.add(new Card(Suit.CLUB, 11));
+
+        Hand overflowAndIncomplete = new Hand(cards);
+        Player player = new Player(0, overflowAndIncomplete, "player");
+
+        gameController.goDown(player, 6);
+
+        assertTrue(player.getHasGoneDown());
+        assertFalse(player.getHasWon());
+        assertEquals(new Card(Suit.CLUB, 11), player.getHand().getHand().get(0));
     }
 
 }

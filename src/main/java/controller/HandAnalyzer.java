@@ -81,11 +81,11 @@ public class HandAnalyzer {
         return initTerciaComponentWeight < newTerciaComponentWeight || initRunsComponentWeight < newRunsComponentWeight;
     }
 
-    private boolean roundNeedsOnlyTercias(int round) {
+    public boolean roundNeedsOnlyTercias(int round) {
         return round == 6 || round == 9 || round == 12;
     }
 
-    private boolean roundNeedsOnlyRuns(int round) {
+    public boolean roundNeedsOnlyRuns(int round) {
         return round == 8 || round == 13;
     }
 
@@ -167,6 +167,16 @@ public class HandAnalyzer {
 
     public int getJokerCount(Hand hand) throws InvalidCardException {
         return hand.getCardCountBySuit(new Card(Suit.JOKER, -1));
+    }
+
+    public List<Card> getJokers(Hand hand) {
+        List<Card> jokers = new ArrayList<>();
+        for (Card card: hand.getHand()) {
+            if (card.getSuit() == Suit.JOKER) {
+                jokers.add(card);
+            }
+        }
+        return jokers;
     }
 
     private List<Suit> getDistinctSuits(Hand hand) {
