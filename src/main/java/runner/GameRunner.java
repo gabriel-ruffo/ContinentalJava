@@ -45,16 +45,22 @@ public class GameRunner {
         GAME_RUNNER_LOGGER.info(player + "'s hand: " + player.getHand().toString());
         gameController.drawCard(player, round);
 
-        if (gameController.checkHandForWinCondition(player.getHand(), round)) {
+        if (gameController.checkHandForWinCondition(player.getHand(), round) || player.getHasGoneDown()) {
             // TODO: implement goDown() -- don't win unless all cards in hand are gone
             gameController.goDown(player, round);
-            GAME_RUNNER_LOGGER.info(player + " wins round " + round + "!");
-            roundWon = true;
-            round++;
+            if (player.getHasWon()) {
+                GAME_RUNNER_LOGGER.info(player + " wins round " + round + "!");
+                roundWon = true;
+                round++;
+            } else {
+                gameController.discardCard(player, round);
+            }
+
         } else {
             gameController.discardCard(player, round);
         }
 
+        // check if won
         GAME_RUNNER_LOGGER.info(player + "'s hand: " + player.getHand().toString());
         System.out.println("===============================================================");
     }

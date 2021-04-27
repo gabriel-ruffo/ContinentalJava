@@ -57,6 +57,10 @@ public class Player {
         return this.hand;
     }
 
+    public void setDownedHand(List<Hand> downedHand) {
+        this.downedHand = downedHand;
+    }
+
     public List<Hand> getDownedHand() {
         return downedHand;
     }

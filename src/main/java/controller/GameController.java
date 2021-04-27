@@ -81,15 +81,45 @@ public class GameController {
 
     public void discardCard(Player player, int round) throws InvalidHandException, InvalidCardException {
         HandController handController = new HandController();
-        discardPile.getDeck().add(
-                handController.discardWorstCard(player.getHand(), round));
+        if (player.getHasGoneDown()) {
+            checkDownedHands(player);
+        }
+        if (player.getHand().getHand().size() == 0) {
+            player.setHasWon(true);
+            discardCardHasBeenGrabbed = false;
+            return;
+        }
+        discardPile.getDeck().add(handController.discardWorstCard(player.getHand(), round));
         discardCardHasBeenGrabbed = false;
     }
 
-    public void goDown(Player player, int round) throws InvalidCardException, InvalidHandException {
-        // generate tercia types
-        // place down in order: overflow, perfect, incompletes with flex card completion
-        // if overflow has 6+ cards and no perfect and no incompletes with flex card completion, split overflow
+    /*
+    Tests:
+    player discard tercia possible to own downed hands
+    player discard run possible to own downed hands
+    player discard tercia possible to other player's downed hands
+    player discard run possible to other player's downed hands
+    player discard run possible to replace joker in other player's downed hands
+    player discard run possible by relocating joker in other player's downed hands
+        check weights & jokers for solution
+    player discard tercia/run possibles where player discards whole hand
+    player discard tercia/run possibles with one left over to be discarded to pile
+     */
+    private void checkDownedHands(Player player) {
+        for (Player playerCheck : players) {
+            if (playerCheck.equals(player))
+                continue;
+            if (playerCheck.getHasGoneDown()) {
+                List<Hand> playerCheckDownedHands = playerCheck.getDownedHand();
+                List<Hand> playerDownedHands = player.getDownedHand();
+                Hand playerHand = player.getHand();
+
+
+            }
+        }
+    }
+
+    public void goDown(Player player, int round) throws InvalidCardException {
         // set hasGoneDown to true -- remember to turn to false when starting new round
         handAnalyzer.generateTerciaTypes(player.getHand());
 

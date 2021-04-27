@@ -8,6 +8,7 @@ import model.Suit;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -249,7 +250,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void testGoDownPerfectHand() throws InvalidCardException, InvalidHandException {
+    public void testGoDownPerfectHand() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 2));
         cards.add(new Card(Suit.CLUB, 2));
@@ -268,7 +269,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void testGoDownTwoOverflows() throws InvalidCardException, InvalidHandException {
+    public void testGoDownTwoOverflows() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 2));
         cards.add(new Card(Suit.CLUB, 2));
@@ -289,14 +290,14 @@ public class GameControllerTest {
     }
 
     @Test
-    public void testGoDownTwoIncompletesWithJokers() throws InvalidCardException, InvalidHandException {
+    public void testGoDownTwoIncompletesWithJokers() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.JOKER, -1));
         cards.add(new Card(Suit.JOKER, -1));
         cards.add(new Card(Suit.CLUB, 2));
         cards.add(new Card(Suit.CLUB, 2));
         cards.add(new Card(Suit.CLUB, 10));
-        cards.add(new Card(Suit.CLUB, 10));;
+        cards.add(new Card(Suit.CLUB, 10));
 
         Hand twoIncompleteTercias = new Hand(cards);
         Player player = new Player(0, twoIncompleteTercias, "player");
@@ -308,7 +309,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void testGoDownPerfectAndOverflowNoExtras() throws InvalidCardException, InvalidHandException {
+    public void testGoDownPerfectAndOverflowNoExtras() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 2));
         cards.add(new Card(Suit.CLUB, 2));
@@ -328,7 +329,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void testGoDownPerfectAndIncompleteWithJokerNoExtras() throws InvalidCardException, InvalidHandException {
+    public void testGoDownPerfectAndIncompleteWithJokerNoExtras() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.JOKER, -1));
         cards.add(new Card(Suit.CLUB, 2));
@@ -347,7 +348,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void testGoDownOverflowAndIncompleteWithJokerNoExtras() throws InvalidCardException, InvalidHandException {
+    public void testGoDownOverflowAndIncompleteWithJokerNoExtras() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.JOKER, -1));
         cards.add(new Card(Suit.CLUB, 2));
@@ -367,7 +368,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void testGoDownTwoPerfectWithExtras() throws InvalidCardException, InvalidHandException {
+    public void testGoDownTwoPerfectWithExtras() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 2));
         cards.add(new Card(Suit.CLUB, 2));
@@ -388,7 +389,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void testGoDownTwoOverflowsWithExtras() throws InvalidCardException, InvalidHandException {
+    public void testGoDownTwoOverflowsWithExtras() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 2));
         cards.add(new Card(Suit.CLUB, 2));
@@ -413,7 +414,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void testGoDownTwoIncompletesWithJokersWithExtras() throws InvalidCardException, InvalidHandException {
+    public void testGoDownTwoIncompletesWithJokersWithExtras() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.JOKER, -1));
         cards.add(new Card(Suit.JOKER, -1));
@@ -434,7 +435,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void testGoDownPerfectAndOverflowWithExtras() throws InvalidCardException, InvalidHandException {
+    public void testGoDownPerfectAndOverflowWithExtras() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.CLUB, 2));
         cards.add(new Card(Suit.CLUB, 2));
@@ -456,7 +457,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void testGoDownPerfectAndIncompleteWithJokerWithExtras() throws InvalidCardException, InvalidHandException {
+    public void testGoDownPerfectAndIncompleteWithJokerWithExtras() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.JOKER, -1));
         cards.add(new Card(Suit.CLUB, 2));
@@ -477,7 +478,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void testGoDownOverflowAndIncompleteWithJokerWithExtras() throws InvalidCardException, InvalidHandException {
+    public void testGoDownOverflowAndIncompleteWithJokerWithExtras() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.JOKER, -1));
         cards.add(new Card(Suit.CLUB, 2));
@@ -498,4 +499,35 @@ public class GameControllerTest {
         assertEquals(new Card(Suit.CLUB, 11), player.getHand().getHand().get(0));
     }
 
+    @Test
+    public void testDiscardWhenOtherPlayersHaveGoneDown() throws InvalidCardException, InvalidHandException {
+        Player player1 = new Player("player1");
+        Player player2 = new Player("player2");
+
+        List<Hand> player1DownedHands = new ArrayList<>();
+        List<Card> player1CardsList = new ArrayList<>();
+        player1CardsList.add(new Card(Suit.CLUB, 2));
+        player1CardsList.add(new Card(Suit.CLUB, 2));
+        player1CardsList.add(new Card(Suit.CLUB, 2));
+        player1DownedHands.add(new Hand(player1CardsList));
+
+        player1.setDownedHand(player1DownedHands);
+        player1.setHasGoneDown(true);
+
+        List<Card> player2CardsList = new ArrayList<>();
+        player2CardsList.add(new Card(Suit.CLUB, 2));
+        player2CardsList.add(new Card(Suit.CLUB, 5));
+        player2CardsList.add(new Card(Suit.CLUB, 11));
+        player2.setHand(new Hand(player2CardsList));
+
+        player2.setHasGoneDown(true);
+
+        List<Player> playerList = new ArrayList<>();
+        playerList.add(player1);
+        playerList.add(player2);
+
+        GameController downedPlayersGameController = new GameController(playerList);
+
+        downedPlayersGameController.discardCard(player2, 6);
+    }
 }
