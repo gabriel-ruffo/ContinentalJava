@@ -110,11 +110,22 @@ public class GameController {
             if (playerCheck.equals(player))
                 continue;
             if (playerCheck.getHasGoneDown()) {
-                List<Hand> playerCheckDownedHands = playerCheck.getDownedHand();
-                List<Hand> playerDownedHands = player.getDownedHand();
+                List<List<Hand>> handsList = new ArrayList<>();
+                handsList.add(playerCheck.getDownedHand());
+                handsList.add(player.getDownedHand());
                 Hand playerHand = player.getHand();
 
-
+                for (List<Hand> downedHands : handsList) {
+                    for (Hand hand : downedHands) {
+                        for (Card card : playerHand.getHand()) {
+                            if (handAnalyzer.cardHelpsHand(card, hand)) {
+                                player.getHand().removeFromHand(card);
+                                hand.addToHand(card);
+                                return;
+                            }
+                        }
+                    }
+                }
             }
         }
     }

@@ -528,6 +528,9 @@ public class GameControllerTest {
 
         GameController downedPlayersGameController = new GameController(playerList);
 
+        // will discard 2 and 5
         downedPlayersGameController.discardCard(player2, 6);
+
+        assertEquals(1, player2.getHand().getHand().size());
     }
 }

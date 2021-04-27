@@ -90,7 +90,4 @@ public class Deck {
         player.getHand().addToHand(getCard());
     }
 
-    private boolean roundIsValid(int round) {
-        return round >= 6 && round <= 13;
-    }
 }
