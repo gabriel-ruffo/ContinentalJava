@@ -70,7 +70,12 @@ public class GameController {
 
     public void drawCard(Player player, int round) throws InvalidPlayerException, InvalidRoundException,
             InvalidDeckException, InvalidHandException, InvalidCardException {
-        // TODO: if deck is empty, reshuffle discardDeck - 1 into deck again
+        if (deck.getDeck().isEmpty()) {
+            List<Card> tempDeck = discardPile.getDeck().subList(1, discardPile.getDeck().size());
+            deck.setDeck(tempDeck);
+            deck.shuffle();
+        }
+
         if (!discardCardHasBeenGrabbed && discardPile.getDeck().size() > 0) {
             if (!checkDiscardCardDesirability(player, round)) {
                 deck.dealToPlayer(player, 1);
@@ -192,11 +197,15 @@ public class GameController {
         return validTerciasCount;
     }
 
-    private void moveCardsToDownedHand(HandAnalyzer handAnalyzer, Player player, int round) {
+    private void moveCardsToDownedHand(HandAnalyzer handAnalyzer, Player player, int round) throws InvalidCardException {
         // TODO: need to only down exact number of hands needed for round
         List<List<List<Card>>> allTerciaTypesList = new ArrayList<>();
+        List<List<Card>> incompleteTercias = handAnalyzer.getIncompleteTercias();
+        if (validIncompleteTerciasWithJokers(incompleteTercias.size(), handAnalyzer.getJokerCount(player.getHand()))) {
+            allTerciaTypesList.add(handAnalyzer.getIncompleteTercias());
+        }
+
         allTerciaTypesList.add(handAnalyzer.getOverflowTercias());
-        allTerciaTypesList.add(handAnalyzer.getIncompleteTercias());
         allTerciaTypesList.add(handAnalyzer.getPerfectTercias());
 
         if (handAnalyzer.getIncompleteTercias().size() > 0) {
@@ -209,14 +218,20 @@ public class GameController {
             for (List<Card> tercia : terciaTypeList) {
                 player.getHand().removeCardsFromHand(tercia);
                 player.getDownedHand().add(new Hand(tercia));
-                if (++downedHandCount == round / 2) {
+                if (++downedHandCount == round / 3) {
                     break;
                 }
             }
         }
-        List<Card> jokers = handAnalyzer.getJokers(player.getHand());
-        player.getHand().removeCardsFromHand(jokers);
-        player.getDownedHand().add(new Hand(jokers));
+        if (validIncompleteTerciasWithJokers(incompleteTercias.size(), handAnalyzer.getJokerCount(player.getHand()))) {
+            List<Card> jokers = handAnalyzer.getJokers(player.getHand());
+            player.getHand().removeCardsFromHand(jokers);
+            player.getDownedHand().add(new Hand(jokers));
+        }
+    }
+
+    private boolean validIncompleteTerciasWithJokers(int incompleteTercias, int jokerCount) throws InvalidCardException {
+        return incompleteTercias > 0 && jokerCount == incompleteTercias;
     }
 
     private void dealCards(int round) throws InvalidCardException, InvalidPlayerException, InvalidRoundException {

@@ -533,4 +533,24 @@ public class GameControllerTest {
 
         assertEquals(1, player2.getHand().getHand().size());
     }
+
+    @Test
+    public void testGoDownWithProblematicHand() throws InvalidCardException {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(Suit.HEART, 4));
+        cards.add(new Card(Suit.DIAMOND, 4));
+        cards.add(new Card(Suit.SPADE, 5));
+        cards.add(new Card(Suit.DIAMOND, 5));
+        cards.add(new Card(Suit.CLUB, 5));
+        cards.add(new Card(Suit.HEART, 11));
+        cards.add(new Card(Suit.CLUB, 11));
+        cards.add(new Card(Suit.SPADE, 11));
+        cards.add(new Card(Suit.CLUB, 13));
+
+        Hand problematicHand = new Hand(cards);
+
+        Player player = new Player(0, problematicHand, "player");
+
+        gameController.goDown(player, 6);
+    }
 }

@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 
 public class Deck {
 
-    private final List<Card> deck;
+    private List<Card> deck;
     private final Logger DECK_LOGGER = LogManager.getLogger(Deck.class);
 
     public Deck() {
@@ -37,6 +37,10 @@ public class Deck {
 
         deck.add(new Card(Suit.JOKER, -1));
         deck.add(new Card(Suit.JOKER, -1));
+    }
+
+    public void setDeck(List<Card> deck) {
+        this.deck = deck;
     }
 
     public void shuffle() {
