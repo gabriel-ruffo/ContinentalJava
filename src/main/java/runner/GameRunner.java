@@ -7,6 +7,7 @@ import exceptions.deck.InvalidDeckException;
 import exceptions.game.InvalidRoundException;
 import exceptions.hand.InvalidHandException;
 import exceptions.player.InvalidPlayerException;
+import exceptions.points.InvalidPointsException;
 import model.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,12 +42,14 @@ public class GameRunner {
     }
 
     private void playTurn(Player player) throws InvalidPlayerException, InvalidDeckException, InvalidRoundException,
-            InvalidHandException, InvalidCardException {
+            InvalidHandException, InvalidCardException, InvalidPointsException {
+        GAME_RUNNER_LOGGER.info("Upkeep step for " + player.getName());
         GAME_RUNNER_LOGGER.info(player + "'s hand: " + player.getHand().toString());
+
         gameController.drawCard(player, round);
 
+        GAME_RUNNER_LOGGER.info("Discard step for " + player.getName());
         if (gameController.checkHandForWinCondition(player.getHand(), round) || player.getHasGoneDown()) {
-            // TODO: implement goDown() -- don't win unless all cards in hand are gone
             gameController.goDown(player, round);
             if (player.getHasWon()) {
                 GAME_RUNNER_LOGGER.info(player + " wins round " + round + "!");
@@ -55,14 +58,30 @@ public class GameRunner {
             } else {
                 gameController.discardCard(player, round);
             }
-
         } else {
             gameController.discardCard(player, round);
         }
 
-        // check if won
+        if (player.getHasWon()) {
+            GAME_RUNNER_LOGGER.info(player + " wins round " + round + "!");
+            roundWon = true;
+            round++;
+        }
+
+        if (roundWon) {
+            gameController.calculatePlayersPoints();
+            printPoints();
+            return;
+        }
+
         GAME_RUNNER_LOGGER.info(player + "'s hand: " + player.getHand().toString());
         System.out.println("===============================================================");
+    }
+
+    private void printPoints() {
+        for (Player player : players) {
+            GAME_RUNNER_LOGGER.info(player + "; points: " + player.getPoints());
+        }
     }
 
 }

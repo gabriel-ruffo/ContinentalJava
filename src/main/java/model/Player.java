@@ -49,6 +49,12 @@ public class Player {
         }
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public boolean handIsEmpty() { return this.hand.getHand().isEmpty(); }
+
     public void setHand(Hand hand) {
         this.hand = hand;
     }
@@ -91,5 +97,4 @@ public class Player {
                 "name='" + name + '\'' +
                 " points=" + points + '}';
     }
-
 }

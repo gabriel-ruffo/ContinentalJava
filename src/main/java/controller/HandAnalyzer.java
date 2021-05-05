@@ -81,11 +81,6 @@ public class HandAnalyzer {
         return initTerciaComponentWeight < newTerciaComponentWeight || initRunsComponentWeight < newRunsComponentWeight;
     }
 
-    public boolean cardHelpsHand(Card card, Hand hand, int round) {
-
-        return false;
-    }
-
     public boolean roundNeedsOnlyTercias(int round) {
         return round == 6 || round == 9 || round == 12;
     }
@@ -184,6 +179,7 @@ public class HandAnalyzer {
         return jokers;
     }
 
+    // only checking tercia helpfulness
     public boolean cardHelpsHand(Card card, Hand hand) {
         return hand.getHand().get(0).getRank() == card.getRank();
     }

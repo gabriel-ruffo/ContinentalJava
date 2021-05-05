@@ -5,6 +5,7 @@ import exceptions.deck.InvalidDeckException;
 import exceptions.game.InvalidRoundException;
 import exceptions.hand.InvalidHandException;
 import exceptions.player.InvalidPlayerException;
+import exceptions.points.InvalidPointsException;
 import model.Card;
 import model.Deck;
 import model.Hand;
@@ -69,6 +70,7 @@ public class GameController {
 
     public void drawCard(Player player, int round) throws InvalidPlayerException, InvalidRoundException,
             InvalidDeckException, InvalidHandException, InvalidCardException {
+        // TODO: if deck is empty, reshuffle discardDeck - 1 into deck again
         if (!discardCardHasBeenGrabbed && discardPile.getDeck().size() > 0) {
             if (!checkDiscardCardDesirability(player, round)) {
                 deck.dealToPlayer(player, 1);
@@ -79,17 +81,38 @@ public class GameController {
         player.getHand().sortHand();
     }
 
+    /**
+     * Goes through the discard step of a player's turn. First checks
+     * if player has gone down. If so, player checks own downed hands
+     * and others' to discard extra cards. If in discarding to downed
+     * hands, player's hand becomes empty, set win flags. Otherwise,
+     * discard worst card, and check for an empty hand again.
+     * @param player Player to discard card(s)
+     * @param round Current round
+     * @throws InvalidHandException On Hand is empty
+     * @throws InvalidCardException On Card is invalid
+     */
     public void discardCard(Player player, int round) throws InvalidHandException, InvalidCardException {
         HandController handController = new HandController();
         if (player.getHasGoneDown()) {
             checkDownedHands(player);
         }
-        if (player.getHand().getHand().size() == 0) {
-            player.setHasWon(true);
-            discardCardHasBeenGrabbed = false;
+
+        if (player.handIsEmpty()) {
+            setWinFlags(player);
             return;
         }
+
         discardPile.getDeck().add(handController.discardWorstCard(player.getHand(), round));
+        discardCardHasBeenGrabbed = false;
+
+        if (player.handIsEmpty()) {
+            setWinFlags(player);
+        }
+    }
+
+    private void setWinFlags(Player player) {
+        player.setHasWon(true);
         discardCardHasBeenGrabbed = false;
     }
 
@@ -106,24 +129,27 @@ public class GameController {
     player discard tercia/run possibles with one left over to be discarded to pile
      */
     private void checkDownedHands(Player player) {
+        GAME_CONTROLLER_LOGGER.info("Checking downed hands");
+        List<List<Hand>> handsList = new ArrayList<>();
+        handsList.add(player.getDownedHand());
+        Hand playerHand = player.getHand();
+
         for (Player playerCheck : players) {
             if (playerCheck.equals(player))
                 continue;
             if (playerCheck.getHasGoneDown()) {
-                List<List<Hand>> handsList = new ArrayList<>();
                 handsList.add(playerCheck.getDownedHand());
-                handsList.add(player.getDownedHand());
-                Hand playerHand = player.getHand();
+            }
+        }
 
-                for (List<Hand> downedHands : handsList) {
-                    for (Hand hand : downedHands) {
-                        for (Card card : playerHand.getHand()) {
-                            if (handAnalyzer.cardHelpsHand(card, hand)) {
-                                player.getHand().removeFromHand(card);
-                                hand.addToHand(card);
-                                return;
-                            }
-                        }
+        for (List<Hand> downedHands : handsList) {
+            for (Hand hand : downedHands) {
+                for (Card card : playerHand.getHand()) {
+                    if (handAnalyzer.cardHelpsHand(card, hand)) {
+                        GAME_CONTROLLER_LOGGER.info(card + " helps hand: " + hand);
+                        player.getHand().removeFromHand(card);
+                        hand.addToHand(card);
+                        return;
                     }
                 }
             }
@@ -136,36 +162,61 @@ public class GameController {
 
         if (handAnalyzer.roundNeedsOnlyTercias(round)) {
             int neededTercias = round / 3;
-            int validTerciasCount = handAnalyzer.getPerfectTercias().size() + handAnalyzer.getOverflowTercias().size();
-            if (handAnalyzer.getIncompleteTercias().size() > 0 &&
-                    handAnalyzer.getIncompleteTercias().size() == handAnalyzer.getJokerCount(player.getHand())) {
-                validTerciasCount += handAnalyzer.getIncompleteTercias().size();
-            }
+            int validTerciasCount = getValidTerciasCount(player.getHand());
             if (validTerciasCount >= neededTercias) {
-                moveCardsToDownedHand(handAnalyzer, player);
+                GAME_CONTROLLER_LOGGER.info(player + " is going down");
+                moveCardsToDownedHand(handAnalyzer, player, round);
                 player.setHasGoneDown(true);
-                if (player.getHand().getHand().size() == 0) {
+                GAME_CONTROLLER_LOGGER.info(player.getName() + "'s downed hands: " + player.getDownedHand());
+                if (player.handIsEmpty()) {
                     player.setHasWon(true);
                 }
             }
         }
     }
 
-    private void moveCardsToDownedHand(HandAnalyzer handAnalyzer, Player player) {
+    public void calculatePlayersPoints() throws InvalidPointsException {
+        for (Player player : players) {
+            if (!player.getHand().getHand().isEmpty()) {
+                player.addPoints(player.getHand().getPoints());
+            }
+        }
+    }
+
+    private int getValidTerciasCount(Hand hand) throws InvalidCardException {
+        int validTerciasCount = handAnalyzer.getPerfectTercias().size() + handAnalyzer.getOverflowTercias().size();
+        if (handAnalyzer.getIncompleteTercias().size() > 0 &&
+                handAnalyzer.getIncompleteTercias().size() == handAnalyzer.getJokerCount(hand)) {
+            validTerciasCount += handAnalyzer.getIncompleteTercias().size();
+        }
+        return validTerciasCount;
+    }
+
+    private void moveCardsToDownedHand(HandAnalyzer handAnalyzer, Player player, int round) {
+        // TODO: need to only down exact number of hands needed for round
         List<List<List<Card>>> allTerciaTypesList = new ArrayList<>();
         allTerciaTypesList.add(handAnalyzer.getOverflowTercias());
         allTerciaTypesList.add(handAnalyzer.getIncompleteTercias());
         allTerciaTypesList.add(handAnalyzer.getPerfectTercias());
 
+        if (handAnalyzer.getIncompleteTercias().size() > 0) {
+            // TODO: figure out how to add jokers to the incomplete tercias
+            // TODO: maybe do it at the source during generation? @HandAnalyzer line 54
+        }
+
+        int downedHandCount = 0;
         for (List<List<Card>> terciaTypeList : allTerciaTypesList) {
             for (List<Card> tercia : terciaTypeList) {
                 player.getHand().removeCardsFromHand(tercia);
                 player.getDownedHand().add(new Hand(tercia));
+                if (++downedHandCount == round / 2) {
+                    break;
+                }
             }
         }
-
-        player.getHand().removeCardsFromHand(handAnalyzer.getJokers(player.getHand()));
-        player.getDownedHand().add(new Hand(handAnalyzer.getJokers(player.getHand())));
+        List<Card> jokers = handAnalyzer.getJokers(player.getHand());
+        player.getHand().removeCardsFromHand(jokers);
+        player.getDownedHand().add(new Hand(jokers));
     }
 
     private void dealCards(int round) throws InvalidCardException, InvalidPlayerException, InvalidRoundException {
@@ -195,7 +246,10 @@ public class GameController {
     private void checkForOutOfTurn(Player drawPlayer, Player player) throws InvalidPlayerException, InvalidRoundException {
         if (!drawPlayer.equals(player)) {
             GAME_CONTROLLER_LOGGER.info(drawPlayer + " grabbed out of turn, dealing additional card from top deck");
+            // give penalty card to discard pile drawing player
             deck.dealToPlayer(drawPlayer, 1);
+            // give normal card to current turn player
+            deck.dealToPlayer(player, 1);
         }
     }
 
