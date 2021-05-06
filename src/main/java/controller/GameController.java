@@ -70,12 +70,7 @@ public class GameController {
 
     public void drawCard(Player player, int round) throws InvalidPlayerException, InvalidRoundException,
             InvalidDeckException, InvalidHandException, InvalidCardException {
-        if (deck.getDeck().isEmpty()) {
-            List<Card> tempDeck = discardPile.getDeck().subList(1, discardPile.getDeck().size());
-            deck.setDeck(tempDeck);
-            deck.shuffle();
-        }
-
+        GAME_CONTROLLER_LOGGER.info("Deck size: " + deck.getDeck().size());
         if (!discardCardHasBeenGrabbed && discardPile.getDeck().size() > 0) {
             if (!checkDiscardCardDesirability(player, round)) {
                 deck.dealToPlayer(player, 1);
@@ -84,6 +79,15 @@ public class GameController {
             deck.dealToPlayer(player, 1);
         }
         player.getHand().sortHand();
+        checkIfDeckIsEmpty();
+    }
+
+    private void checkIfDeckIsEmpty() {
+        if (deck.getDeck().size() == 1) {
+            List<Card> tempDeck = discardPile.getDeck().subList(1, discardPile.getDeck().size());
+            deck.getDeck().addAll(tempDeck);
+            deck.shuffle();
+        }
     }
 
     /**
@@ -162,7 +166,7 @@ public class GameController {
     }
 
     public void goDown(Player player, int round) throws InvalidCardException {
-        // set hasGoneDown to true -- remember to turn to false when starting new round
+        // set hasGoneDown to true -- TODO: remember to turn to false when starting new round
         handAnalyzer.generateTerciaTypes(player.getHand());
 
         if (handAnalyzer.roundNeedsOnlyTercias(round)) {
@@ -208,11 +212,6 @@ public class GameController {
         allTerciaTypesList.add(handAnalyzer.getOverflowTercias());
         allTerciaTypesList.add(handAnalyzer.getPerfectTercias());
 
-        if (handAnalyzer.getIncompleteTercias().size() > 0) {
-            // TODO: figure out how to add jokers to the incomplete tercias
-            // TODO: maybe do it at the source during generation? @HandAnalyzer line 54
-        }
-
         int downedHandCount = 0;
         for (List<List<Card>> terciaTypeList : allTerciaTypesList) {
             for (List<Card> tercia : terciaTypeList) {
@@ -230,7 +229,7 @@ public class GameController {
         }
     }
 
-    private boolean validIncompleteTerciasWithJokers(int incompleteTercias, int jokerCount) throws InvalidCardException {
+    private boolean validIncompleteTerciasWithJokers(int incompleteTercias, int jokerCount) {
         return incompleteTercias > 0 && jokerCount == incompleteTercias;
     }
 

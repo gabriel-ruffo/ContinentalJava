@@ -52,9 +52,7 @@ public class GameRunner {
         if (gameController.checkHandForWinCondition(player.getHand(), round) || player.getHasGoneDown()) {
             gameController.goDown(player, round);
             if (player.getHasWon()) {
-                GAME_RUNNER_LOGGER.info(player + " wins round " + round + "!");
                 roundWon = true;
-                round++;
             } else {
                 gameController.discardCard(player, round);
             }
@@ -63,14 +61,14 @@ public class GameRunner {
         }
 
         if (player.getHasWon()) {
-            GAME_RUNNER_LOGGER.info(player + " wins round " + round + "!");
             roundWon = true;
-            round++;
         }
 
         if (roundWon) {
+            GAME_RUNNER_LOGGER.info(player + " wins round " + round + "!");
             gameController.calculatePlayersPoints();
             printPoints();
+            round++;
             return;
         }
 

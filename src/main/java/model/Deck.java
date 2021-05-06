@@ -69,6 +69,8 @@ public class Deck {
     }
 
     public void reinitialize() throws InvalidCardException {
+        // deck contains 2 decks
+        makeDeck();
         makeDeck();
         shuffle();
     }

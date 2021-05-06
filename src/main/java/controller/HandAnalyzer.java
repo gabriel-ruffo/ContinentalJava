@@ -181,7 +181,7 @@ public class HandAnalyzer {
 
     // only checking tercia helpfulness
     public boolean cardHelpsHand(Card card, Hand hand) {
-        return hand.getHand().get(0).getRank() == card.getRank();
+        return hand.getHand().get(0).getRank() == card.getRank() || card.getSuit() == Suit.JOKER;
     }
 
     private List<Suit> getDistinctSuits(Hand hand) {
