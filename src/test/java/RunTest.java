@@ -139,7 +139,7 @@ public class RunTest {
     }
 
 //    @Test
-//    public void testBothAceCornerCasesSameSuits() {
+//    public void testBothAceCornerCasesSameSuits() throws InvalidCardException {
 //        ArrayList<Card> cards = new ArrayList<>();
 //        cards.add(new Card(Suit.CLUB, 1));
 //        cards.add(new Card(Suit.CLUB, 2));
@@ -156,7 +156,7 @@ public class RunTest {
 //    }
 //
 //    @Test
-//    public void testLongRunCanBeOneOrTwoRuns() {
+//    public void testLongRunCanBeOneOrTwoRuns() throws InvalidCardException {
 //        ArrayList<Card> cards = new ArrayList<>();
 //        cards.add(new Card(Suit.CLUB, 1));
 //        cards.add(new Card(Suit.CLUB, 2));

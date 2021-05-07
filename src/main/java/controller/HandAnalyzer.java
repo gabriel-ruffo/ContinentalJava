@@ -49,7 +49,7 @@ public class HandAnalyzer {
             if (rank == -1) {
                 continue;
             }
-            List<Card> cardsByRank = hand.getHand().stream().filter(card -> card.getRank() == rank).collect(Collectors.toList());
+            List<Card> cardsByRank = hand.getCardCollectionByRank(rank);
             if (cardsByRank.size() == 2) {
                 incompleteTercias.add(cardsByRank);
             } else if (cardsByRank.size() == 3) {
@@ -57,6 +57,19 @@ public class HandAnalyzer {
             } else if (cardsByRank.size() > 3) {
                 overflowTercias.add(cardsByRank);
             }
+        }
+    }
+
+    public void generateRunTypes(Hand hand) {
+        initLists();
+        List<Suit> distinctSuits = getDistinctSuits(hand);
+
+        for (Suit suit : distinctSuits) {
+            if (suit == Suit.JOKER) {
+                continue;
+            }
+            List<Card> cardsBySuit = hand.getCardCollectionBySuit(suit);
+            // maybe leverage RunController to find weights/missing cards per cardsBySuit?
         }
     }
 

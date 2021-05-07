@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Hand {
 
@@ -56,6 +57,14 @@ public class Hand {
 
     public int getCardCountBySuit(Card card) {
         return (int) hand.stream().filter(predicateCard -> predicateCard.getSuit() == card.getSuit()).count();
+    }
+
+    public List<Card> getCardCollectionByRank(int rank) {
+        return hand.stream().filter(card -> card.getRank() == rank).collect(Collectors.toList());
+    }
+
+    public List<Card> getCardCollectionBySuit(Suit suit) {
+        return hand.stream().filter(card -> card.getSuit() == suit).collect(Collectors.toList());
     }
 
     public Card getHighestPointCard() {

@@ -39,6 +39,8 @@ public class GameRunner {
             }
         }
         roundWon = false;
+        players.forEach(player -> player.setHasGoneDown(false));
+        players.forEach(player -> player.setHasWon(false));
     }
 
     private void playTurn(Player player) throws InvalidPlayerException, InvalidDeckException, InvalidRoundException,

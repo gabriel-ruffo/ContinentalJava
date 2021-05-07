@@ -2,7 +2,6 @@ package controller;
 
 import exceptions.card.InvalidCardException;
 import exceptions.deck.InvalidDeckException;
-import exceptions.game.InvalidRoundException;
 import exceptions.hand.InvalidHandException;
 import exceptions.player.InvalidPlayerException;
 import exceptions.points.InvalidPointsException;
@@ -63,12 +62,12 @@ public class GameController {
         return false;
     }
 
-    public void setupRound(int round) throws InvalidPlayerException, InvalidRoundException, InvalidCardException {
+    public void setupRound(int round) throws InvalidPlayerException, InvalidCardException {
         GAME_CONTROLLER_LOGGER.info("Setting up round: " + round);
         dealCards(round);
     }
 
-    public void drawCard(Player player, int round) throws InvalidPlayerException, InvalidRoundException,
+    public void drawCard(Player player, int round) throws InvalidPlayerException,
             InvalidDeckException, InvalidHandException, InvalidCardException {
         GAME_CONTROLLER_LOGGER.info("Deck size: " + deck.getDeck().size());
         if (!discardCardHasBeenGrabbed && discardPile.getDeck().size() > 0) {
@@ -96,8 +95,9 @@ public class GameController {
      * and others' to discard extra cards. If in discarding to downed
      * hands, player's hand becomes empty, set win flags. Otherwise,
      * discard worst card, and check for an empty hand again.
+     *
      * @param player Player to discard card(s)
-     * @param round Current round
+     * @param round  Current round
      * @throws InvalidHandException On Hand is empty
      * @throws InvalidCardException On Card is invalid
      */
@@ -202,7 +202,6 @@ public class GameController {
     }
 
     private void moveCardsToDownedHand(HandAnalyzer handAnalyzer, Player player, int round) throws InvalidCardException {
-        // TODO: need to only down exact number of hands needed for round
         List<List<List<Card>>> allTerciaTypesList = new ArrayList<>();
         List<List<Card>> incompleteTercias = handAnalyzer.getIncompleteTercias();
         if (validIncompleteTerciasWithJokers(incompleteTercias.size(), handAnalyzer.getJokerCount(player.getHand()))) {
@@ -233,7 +232,7 @@ public class GameController {
         return incompleteTercias > 0 && jokerCount == incompleteTercias;
     }
 
-    private void dealCards(int round) throws InvalidCardException, InvalidPlayerException, InvalidRoundException {
+    private void dealCards(int round) throws InvalidCardException, InvalidPlayerException {
         GAME_CONTROLLER_LOGGER.info("Dealing cards to players");
         deck.reinitialize();
 
@@ -244,7 +243,7 @@ public class GameController {
     }
 
     private boolean checkDiscardCardDesirability(Player player, int round) throws InvalidDeckException, InvalidPlayerException,
-            InvalidRoundException, InvalidHandException, InvalidCardException {
+            InvalidHandException, InvalidCardException {
         for (Player drawPlayer : players) {
             if (handAnalyzer.cardHelpsPlayer(drawPlayer, discardPile.peekCard(), round)) {
                 GAME_CONTROLLER_LOGGER.info(drawPlayer + " is grabbing " + discardPile.peekCard() + " from discard pile");
@@ -257,7 +256,7 @@ public class GameController {
         return false;
     }
 
-    private void checkForOutOfTurn(Player drawPlayer, Player player) throws InvalidPlayerException, InvalidRoundException {
+    private void checkForOutOfTurn(Player drawPlayer, Player player) throws InvalidPlayerException {
         if (!drawPlayer.equals(player)) {
             GAME_CONTROLLER_LOGGER.info(drawPlayer + " grabbed out of turn, dealing additional card from top deck");
             // give penalty card to discard pile drawing player

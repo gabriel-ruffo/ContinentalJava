@@ -553,4 +553,28 @@ public class GameControllerTest {
 
         gameController.goDown(player, 6);
     }
+
+//    @Test
+//    public void testTwoPerfectRuns() throws InvalidCardException {
+//        ArrayList<Card> cards = new ArrayList<>();
+//        cards.add(new Card(Suit.HEART, 2));
+//        cards.add(new Card(Suit.HEART, 3));
+//        cards.add(new Card(Suit.HEART, 4));
+//        cards.add(new Card(Suit.HEART, 5));
+//        cards.add(new Card(Suit.SPADE, 9));
+//        cards.add(new Card(Suit.SPADE, 10));
+//        cards.add(new Card(Suit.SPADE, 11));
+//        cards.add(new Card(Suit.SPADE, 12));
+//
+//        Hand twoRuns = new Hand(cards);
+//
+//        Player player = new Player(0, twoRuns, "player");
+//
+//        assertTrue(gameController.checkHandForWinCondition(twoRuns, 8));
+//
+//        gameController.goDown(player, 8);
+//
+//        assertTrue(player.getHasGoneDown());
+//        assertTrue(player.getHasWon());
+//    }
 }

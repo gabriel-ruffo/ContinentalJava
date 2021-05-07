@@ -75,7 +75,7 @@ public class Deck {
         shuffle();
     }
 
-    public void dealToPlayer(Player player, int round) throws InvalidPlayerException, InvalidRoundException {
+    public void dealToPlayer(Player player, int round) throws InvalidPlayerException {
         if (player == null) {
             throw new InvalidPlayerException("Player can't be null");
         }
