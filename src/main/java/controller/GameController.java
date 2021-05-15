@@ -32,37 +32,6 @@ public class GameController {
         handAnalyzer = new HandAnalyzer();
     }
 
-    /*
-    TODO: Rules to implement
-        1. Can't have a Tercia with more than one Joker
-        2. Can't have a run with two Jokers next to each other
-        3. Can't discard a Joker
-     */
-    // Can i just use hand analyzer here??
-    public boolean checkHandForWinCondition(Hand hand, int round) throws InvalidCardException {
-        switch (round) {
-            case 6:
-                return TerciaController.checkForTercias(hand, 2);
-            case 7:
-//                return checkForTerciaRun(hand);
-            case 8:
-                return RunController.checkForRuns(hand, 2);
-            case 9:
-                return TerciaController.checkForTercias(hand, 3);
-            case 10:
-//                return checkForTwoTerciasOneRun(hand);
-            case 11:
-//                return checkForOneTerciaTwoRuns(hand);
-            case 12:
-                return TerciaController.checkForTercias(hand, 4);
-            case 13:
-//                return checkForThreeRuns(hand);
-            default:
-//                throw new InvalidWinCondition(round + " is not a valid hand.");
-        }
-        return false;
-    }
-
     public void setupRound(int round) throws InvalidPlayerException, InvalidCardException {
         GAME_CONTROLLER_LOGGER.info("Setting up round: " + round);
         dealCards(round);
@@ -168,21 +137,26 @@ public class GameController {
 
     public void goDown(Player player, int round) throws InvalidCardException {
         // set hasGoneDown to true -- TODO: remember to turn to false when starting new round
-        handAnalyzer.generateTerciaTypes(player.getHand());
+        if (canGoDown(player, round)) {
+            GAME_CONTROLLER_LOGGER.info(player + " is going down");
+            moveCardsToDownedHand(handAnalyzer, player, round);
+            player.setHasGoneDown(true);
+            GAME_CONTROLLER_LOGGER.info(player.getName() + "'s downed hands: " + player.getDownedHand());
+            if (player.handIsEmpty()) {
+                player.setHasWon(true);
+            }
+        }
+    }
 
+    public boolean canGoDown(Player player, int round) throws InvalidCardException {
+        handAnalyzer.generateTerciaTypes(player.getHand());
         if (handAnalyzer.roundNeedsOnlyTercias(round)) {
             int neededTercias = round / 3;
             int validTerciasCount = getValidTerciasCount(player.getHand());
-            if (validTerciasCount >= neededTercias) {
-                GAME_CONTROLLER_LOGGER.info(player + " is going down");
-                moveCardsToDownedHand(handAnalyzer, player, round);
-                player.setHasGoneDown(true);
-                GAME_CONTROLLER_LOGGER.info(player.getName() + "'s downed hands: " + player.getDownedHand());
-                if (player.handIsEmpty()) {
-                    player.setHasWon(true);
-                }
-            }
+            return validTerciasCount >= neededTercias;
         }
+
+        return false;
     }
 
     public void calculatePlayersPoints() throws InvalidPointsException {

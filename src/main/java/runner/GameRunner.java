@@ -43,17 +43,19 @@ public class GameRunner {
     }
 
     /**
-     * Main series of actions for each player's turn
-     *      1. Draw a card
-     *      2. Check if can go down
-     *          2.1. Go down
-     *          2.2. Check if won
- *          3. Discard
+     * Main series of actions for each player's turn:
+     * 1. Draw a card
+     * 2. Check if can go down
+     * 2.1. Go down
+     * 2.2. Check if won
+     * 3. Discard
+     * 3.1. Check if won
+     *
      * @param player Current player
      * @throws InvalidPlayerException Invalid player
-     * @throws InvalidDeckException Invalid deck
-     * @throws InvalidHandException Invalid hand
-     * @throws InvalidCardException Invalid card
+     * @throws InvalidDeckException   Invalid deck
+     * @throws InvalidHandException   Invalid hand
+     * @throws InvalidCardException   Invalid card
      * @throws InvalidPointsException Invalid point value
      */
     private void playTurn(Player player) throws InvalidPlayerException, InvalidDeckException,
@@ -63,7 +65,7 @@ public class GameRunner {
 
         gameController.drawCard(player, round);
 
-        if (gameController.checkHandForWinCondition(player.getHand(), round) && !player.getHasGoneDown()) {
+        if (canGoDown(player)) {
             gameController.goDown(player, round);
             if (player.getHasWon()) {
                 roundWonHelper(player);
@@ -81,6 +83,10 @@ public class GameRunner {
 
         LOG.info(player + "'s hand: " + player.getHand().toString());
         System.out.println("===============================================================");
+    }
+
+    private boolean canGoDown(Player player) throws InvalidCardException {
+        return gameController.canGoDown(player, round) && !player.getHasGoneDown();
     }
 
     private void roundWonHelper(Player player) throws InvalidPointsException {

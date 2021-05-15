@@ -26,8 +26,9 @@ public class GameControllerTest {
         cards.add(new Card(Suit.SPADE, 3));
 
         Hand twoTercias = new Hand(cards);
+        Player player= new Player(0, twoTercias, "");
 
-        assertTrue(gameController.checkHandForWinCondition(twoTercias, 6));
+        assertTrue(gameController.canGoDown(player, 6));
     }
 
     @Test
@@ -41,8 +42,9 @@ public class GameControllerTest {
         cards.add(new Card(Suit.HEART, 2));
 
         Hand twoTercias = new Hand(cards);
+        Player player= new Player(0, twoTercias, "");
 
-        assertTrue(gameController.checkHandForWinCondition(twoTercias, 6));
+        assertTrue(gameController.canGoDown(player, 6));
     }
 
     @Test
@@ -56,8 +58,9 @@ public class GameControllerTest {
         cards.add(new Card(Suit.SPADE, 4));
 
         Hand twoTercias = new Hand(cards);
+        Player player= new Player(0, twoTercias, "");
 
-        assertFalse(gameController.checkHandForWinCondition(twoTercias, 6));
+        assertFalse(gameController.canGoDown(player, 6));
     }
 
     @Test
@@ -74,8 +77,9 @@ public class GameControllerTest {
         cards.add(new Card(Suit.SPADE, 4));
 
         Hand threeTercias = new Hand(cards);
+        Player player= new Player(0, threeTercias, "");
 
-        assertTrue(gameController.checkHandForWinCondition(threeTercias, 9));
+        assertTrue(gameController.canGoDown(player, 9));
     }
 
     @Test
@@ -92,8 +96,9 @@ public class GameControllerTest {
         cards.add(new Card(Suit.JOKER, -1));
 
         Hand threeTercias = new Hand(cards);
+        Player player= new Player(0, threeTercias, "");
 
-        assertTrue(gameController.checkHandForWinCondition(threeTercias, 9));
+        assertTrue(gameController.canGoDown(player, 9));
     }
 
     @Test
@@ -110,8 +115,9 @@ public class GameControllerTest {
         cards.add(new Card(Suit.JOKER, -1));
 
         Hand threeTercias = new Hand(cards);
+        Player player= new Player(0, threeTercias, "");
 
-        assertTrue(gameController.checkHandForWinCondition(threeTercias, 9));
+        assertTrue(gameController.canGoDown(player, 9));
     }
 
     @Test
@@ -128,8 +134,9 @@ public class GameControllerTest {
         cards.add(new Card(Suit.JOKER, -1));
 
         Hand threeTercias = new Hand(cards);
+        Player player= new Player(0, threeTercias, "");
 
-        assertTrue(gameController.checkHandForWinCondition(threeTercias, 9));
+        assertTrue(gameController.canGoDown(player, 9));
     }
 
     @Test
@@ -146,8 +153,9 @@ public class GameControllerTest {
         cards.add(new Card(Suit.JOKER, -1));
 
         Hand threeTercias = new Hand(cards);
+        Player player= new Player(0, threeTercias, "");
 
-        assertFalse(gameController.checkHandForWinCondition(threeTercias, 9));
+        assertFalse(gameController.canGoDown(player, 9));
     }
 
     @Test
@@ -164,8 +172,9 @@ public class GameControllerTest {
         cards.add(new Card(Suit.JOKER, -1));
 
         Hand threeTercias = new Hand(cards);
+        Player player= new Player(0, threeTercias, "");
 
-        assertFalse(gameController.checkHandForWinCondition(threeTercias, 9));
+        assertFalse(gameController.canGoDown(player, 9));
     }
 
     @Test
@@ -182,8 +191,9 @@ public class GameControllerTest {
         cards.add(new Card(Suit.CLUB, 12));
 
         Hand threeTercias = new Hand(cards);
+        Player player= new Player(0, threeTercias, "");
 
-        assertFalse(gameController.checkHandForWinCondition(threeTercias, 9));
+        assertFalse(gameController.canGoDown(player, 9));
     }
 
     @Test
@@ -203,8 +213,9 @@ public class GameControllerTest {
         cards.add(new Card(Suit.SPADE, 5));
 
         Hand fourTercias = new Hand(cards);
+        Player player= new Player(0, fourTercias, "");
 
-        assertTrue(gameController.checkHandForWinCondition(fourTercias, 12));
+        assertTrue(gameController.canGoDown(player, 12));
     }
 
     @Test
@@ -224,8 +235,9 @@ public class GameControllerTest {
         cards.add(new Card(Suit.JOKER, -1));
 
         Hand fourTercias = new Hand(cards);
+        Player player= new Player(0, fourTercias, "");
 
-        assertTrue(gameController.checkHandForWinCondition(fourTercias, 12));
+        assertTrue(gameController.canGoDown(player, 12));
     }
 
     @Test
@@ -245,8 +257,9 @@ public class GameControllerTest {
         cards.add(new Card(Suit.SPADE, 6));
 
         Hand fourTercias = new Hand(cards);
+        Player player= new Player(0, fourTercias, "");
 
-        assertFalse(gameController.checkHandForWinCondition(fourTercias, 12));
+        assertFalse(gameController.canGoDown(player, 12));
     }
 
     @Test
@@ -570,7 +583,7 @@ public class GameControllerTest {
 //
 //        Player player = new Player(0, twoRuns, "player");
 //
-//        assertTrue(gameController.checkHandForWinCondition(twoRuns, 8));
+//        assertTrue(gameController.canGoDown(twoRuns, 8));
 //
 //        gameController.goDown(player, 8);
 //
