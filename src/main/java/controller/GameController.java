@@ -38,6 +38,7 @@ public class GameController {
         2. Can't have a run with two Jokers next to each other
         3. Can't discard a Joker
      */
+    // Can i just use hand analyzer here??
     public boolean checkHandForWinCondition(Hand hand, int round) throws InvalidCardException {
         switch (round) {
             case 6:

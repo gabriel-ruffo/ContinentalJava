@@ -4,7 +4,6 @@ import controller.GameController;
 import exceptions.GeneralGameException;
 import exceptions.card.InvalidCardException;
 import exceptions.deck.InvalidDeckException;
-import exceptions.game.InvalidRoundException;
 import exceptions.hand.InvalidHandException;
 import exceptions.player.InvalidPlayerException;
 import exceptions.points.InvalidPointsException;
@@ -19,7 +18,7 @@ public class GameRunner {
     private final GameController gameController;
     private final List<Player> players;
 
-    private final Logger GAME_RUNNER_LOGGER = LogManager.getLogger(GameRunner.class);
+    private final Logger LOG = LogManager.getLogger(GameRunner.class);
 
     private int round;
     private boolean roundWon = false;
@@ -43,44 +42,58 @@ public class GameRunner {
         players.forEach(player -> player.setHasWon(false));
     }
 
-    private void playTurn(Player player) throws InvalidPlayerException, InvalidDeckException, InvalidRoundException,
+    /**
+     * Main series of actions for each player's turn
+     *      1. Draw a card
+     *      2. Check if can go down
+     *          2.1. Go down
+     *          2.2. Check if won
+ *          3. Discard
+     * @param player Current player
+     * @throws InvalidPlayerException Invalid player
+     * @throws InvalidDeckException Invalid deck
+     * @throws InvalidHandException Invalid hand
+     * @throws InvalidCardException Invalid card
+     * @throws InvalidPointsException Invalid point value
+     */
+    private void playTurn(Player player) throws InvalidPlayerException, InvalidDeckException,
             InvalidHandException, InvalidCardException, InvalidPointsException {
-        GAME_RUNNER_LOGGER.info("Upkeep step for " + player.getName());
-        GAME_RUNNER_LOGGER.info(player + "'s hand: " + player.getHand().toString());
+        LOG.info("Upkeep step for " + player.getName());
+        LOG.info(player + "'s hand: " + player.getHand().toString());
 
         gameController.drawCard(player, round);
 
-        GAME_RUNNER_LOGGER.info("Discard step for " + player.getName());
-        if (gameController.checkHandForWinCondition(player.getHand(), round) || player.getHasGoneDown()) {
+        if (gameController.checkHandForWinCondition(player.getHand(), round) && !player.getHasGoneDown()) {
             gameController.goDown(player, round);
             if (player.getHasWon()) {
-                roundWon = true;
-            } else {
-                gameController.discardCard(player, round);
+                roundWonHelper(player);
+                return;
             }
-        } else {
-            gameController.discardCard(player, round);
         }
+
+        LOG.info("Discard step for " + player.getName());
+        gameController.discardCard(player, round);
 
         if (player.getHasWon()) {
-            roundWon = true;
-        }
-
-        if (roundWon) {
-            GAME_RUNNER_LOGGER.info(player + " wins round " + round + "!");
-            gameController.calculatePlayersPoints();
-            printPoints();
-            round++;
+            roundWonHelper(player);
             return;
         }
 
-        GAME_RUNNER_LOGGER.info(player + "'s hand: " + player.getHand().toString());
+        LOG.info(player + "'s hand: " + player.getHand().toString());
         System.out.println("===============================================================");
+    }
+
+    private void roundWonHelper(Player player) throws InvalidPointsException {
+        roundWon = true;
+        LOG.info(player + " wins round " + round + "!");
+        gameController.calculatePlayersPoints();
+        printPoints();
+        round++;
     }
 
     private void printPoints() {
         for (Player player : players) {
-            GAME_RUNNER_LOGGER.info(player + "; points: " + player.getPoints());
+            LOG.info(player + "; points: " + player.getPoints());
         }
     }
 
