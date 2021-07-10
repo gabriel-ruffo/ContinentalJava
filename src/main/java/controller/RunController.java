@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 public class RunController {
     private static final Logger ERROR_LOGGER = LogManager.getLogger(RunController.class);
-
     /*
     Test:
         Ace to four
@@ -23,6 +22,7 @@ public class RunController {
      */
     public static boolean checkForRuns(Hand hand, int runCount) throws InvalidCardException {
         int jokerCount = hand.getCardCountBySuit(new Card(Suit.JOKER, -1));
+
         hand.sortHand();
         List<Suit> suits = getDistinctSuits(hand);
 
@@ -47,6 +47,11 @@ public class RunController {
         int runBuildCount = 1;
 
         for (Card card : cards) {
+            // skip Ace consideration for incomplete runs
+            if (card.getRank() == 1) {
+                continue;
+            }
+
             int cardDiff = card.getRank() - cardRankPointer;
 
             if (cardDiff == 1) {
@@ -57,7 +62,7 @@ public class RunController {
                 runBuildCount += 2;
                 jokerCount--;
                 cardRankPointer = card.getRank();
-            } else if (possibleRoyalStraight(cardDiff)) {
+            } else if (possibleRoyalStraight(cardDiff)) { // maybe replace with straightneedsace
                 // ace to jack -- may be a royal straight
                 runBuildCount += 2;
                 cardRankPointer = card.getRank();
@@ -78,6 +83,10 @@ public class RunController {
 
     private static boolean straightNeedsJoker(int cardDiff, int jokerCount) {
         return (cardDiff == 2) && jokerCount > 0;
+    }
+
+    private static boolean straightNeedsAce(int aceCount) {
+        return false;
     }
 
     private static List<Suit> getDistinctSuits(Hand hand) {

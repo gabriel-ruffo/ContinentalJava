@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class HandAnalyzer {
+    // TODO: replace Run/TerciaController logic with their respective HandAnalyzer logic
+    // TODO: and use them as objects
     private List<Card> terciaPossibles;
     private List<Card> runPossibles;
     private List<Card> flexCards;
@@ -70,6 +72,7 @@ public class HandAnalyzer {
             }
             List<Card> cardsBySuit = hand.getCardCollectionBySuit(suit);
             // maybe leverage RunController to find weights/missing cards per cardsBySuit?
+
         }
     }
 
