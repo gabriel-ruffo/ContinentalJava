@@ -32,7 +32,7 @@ public class GameController {
         handAnalyzer = new HandAnalyzer();
     }
 
-    public void setupRound(int round) throws InvalidPlayerException, InvalidCardException {
+    public void setupRound(int round) throws InvalidPlayerException, InvalidCardException, InvalidDeckException {
         GAME_CONTROLLER_LOGGER.info("Setting up round: " + round);
         dealCards(round);
     }
@@ -170,7 +170,7 @@ public class GameController {
     private int getValidTerciasCount(Hand hand) throws InvalidCardException {
         int validTerciasCount = handAnalyzer.getPerfectTercias().size() + handAnalyzer.getOverflowTercias().size();
         if (handAnalyzer.getIncompleteTercias().size() > 0 &&
-                handAnalyzer.getIncompleteTercias().size() == handAnalyzer.getJokerCount(hand)) {
+                handAnalyzer.getIncompleteTercias().size() == hand.getJokerCount()) {
             validTerciasCount += handAnalyzer.getIncompleteTercias().size();
         }
         return validTerciasCount;
@@ -179,7 +179,7 @@ public class GameController {
     private void moveCardsToDownedHand(HandAnalyzer handAnalyzer, Player player, int round) throws InvalidCardException {
         List<List<List<Card>>> allTerciaTypesList = new ArrayList<>();
         List<List<Card>> incompleteTercias = handAnalyzer.getIncompleteTercias();
-        if (validIncompleteTerciasWithJokers(incompleteTercias.size(), handAnalyzer.getJokerCount(player.getHand()))) {
+        if (validIncompleteTerciasWithJokers(incompleteTercias.size(), player.getHand().getJokerCount())) {
             allTerciaTypesList.add(handAnalyzer.getIncompleteTercias());
         }
 
@@ -196,7 +196,7 @@ public class GameController {
                 }
             }
         }
-        if (validIncompleteTerciasWithJokers(incompleteTercias.size(), handAnalyzer.getJokerCount(player.getHand()))) {
+        if (validIncompleteTerciasWithJokers(incompleteTercias.size(), player.getHand().getJokerCount())) {
             List<Card> jokers = handAnalyzer.getJokers(player.getHand());
             player.getHand().removeCardsFromHand(jokers);
             player.getDownedHand().add(new Hand(jokers));
@@ -207,7 +207,7 @@ public class GameController {
         return incompleteTercias > 0 && jokerCount == incompleteTercias;
     }
 
-    private void dealCards(int round) throws InvalidCardException, InvalidPlayerException {
+    private void dealCards(int round) throws InvalidCardException, InvalidPlayerException, InvalidDeckException {
         GAME_CONTROLLER_LOGGER.info("Dealing cards to players");
         deck.reinitialize();
 
@@ -231,7 +231,7 @@ public class GameController {
         return false;
     }
 
-    private void checkForOutOfTurn(Player drawPlayer, Player player) throws InvalidPlayerException {
+    private void checkForOutOfTurn(Player drawPlayer, Player player) throws InvalidPlayerException, InvalidDeckException {
         if (!drawPlayer.equals(player)) {
             GAME_CONTROLLER_LOGGER.info(drawPlayer + " grabbed out of turn, dealing additional card from top deck");
             // give penalty card to discard pile drawing player

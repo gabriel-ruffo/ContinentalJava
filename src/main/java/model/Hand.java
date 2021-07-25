@@ -1,5 +1,7 @@
 package model;
 
+import exceptions.card.InvalidCardException;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -57,6 +59,10 @@ public class Hand {
 
     public int getCardCountBySuit(Card card) {
         return (int) hand.stream().filter(predicateCard -> predicateCard.getSuit() == card.getSuit()).count();
+    }
+
+    public int getJokerCount() throws InvalidCardException {
+        return getCardCountBySuit(new Card(Suit.JOKER, -1));
     }
 
     public List<Card> getCardCollectionByRank(int rank) {

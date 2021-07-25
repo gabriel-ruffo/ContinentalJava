@@ -1,5 +1,6 @@
 import exceptions.card.InvalidCardException;
 import model.Card;
+import model.Hand;
 import model.Suit;
 import org.junit.Test;
 
@@ -32,8 +33,16 @@ public class CardTest {
         assertEquals(Suit.JOKER, joker.getSuit());
         assertEquals(-1, joker.getRank());
 
-        System.out.println(twoOfHearts.toString());
-        System.out.println(joker.toString());
+        assertEquals(twoOfHearts, twoOfHearts);
+        assertNotEquals(null, twoOfHearts);
+
+        Card invalid = new Card(Suit.HEART, 100);
+        assertFalse(invalid.validate());
+
+        System.out.println(twoOfHearts);
+        System.out.println(joker);
+        System.out.println(twoOfHearts.hashCode());
+        System.out.println(joker.hashCode());
     }
 
     @Test

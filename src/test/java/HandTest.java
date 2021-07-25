@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -153,6 +154,33 @@ public class HandTest {
 
         assertEquals(2, hand.getHand().size());
         assertEquals(55, hand.getPoints());
+    }
+
+    @Test
+    public void testGetCardCollectionBySuit() throws InvalidCardException {
+        ArrayList<Card> cards = new ArrayList<>();
+        Collections.addAll(cards,
+                new Card(Suit.HEART, 1),
+                new Card(Suit.HEART, 2),
+                new Card(Suit.CLUB, 3),
+                new Card(Suit.DIAMOND, 3),
+                new Card(Suit.DIAMOND, 4),
+                new Card(Suit.CLUB, 5));
+        Hand hand = new Hand(cards);
+
+        List<Card> hearts = hand.getCardCollectionBySuit(Suit.HEART);
+        List<Card> clubs = hand.getCardCollectionBySuit(Suit.CLUB);
+        List<Card> spades = hand.getCardCollectionBySuit(Suit.SPADE);
+
+        assertEquals(hearts.size(), 2);
+        assertTrue(hearts.contains(new Card(Suit.HEART, 1)));
+        assertTrue(hearts.contains(new Card(Suit.HEART, 2)));
+
+        assertEquals(clubs.size(), 2);
+        assertTrue(clubs.contains(new Card(Suit.CLUB, 3)));
+        assertTrue(clubs.contains(new Card(Suit.CLUB, 5)));
+
+        assertEquals(spades.size(), 0);
     }
 
 }

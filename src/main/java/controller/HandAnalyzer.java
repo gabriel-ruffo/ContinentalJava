@@ -30,7 +30,7 @@ public class HandAnalyzer {
         }
         this.round = round;
         initLists();
-        jokerCount = getJokerCount(hand);
+        jokerCount = hand.getJokerCount();
 
         if (roundNeedsOnlyTercias(round)) {
             generateTerciaComponent(hand);
@@ -179,10 +179,6 @@ public class HandAnalyzer {
         if (!runPossibles.contains(card)) {
             runPossibles.add(card);
         }
-    }
-
-    public int getJokerCount(Hand hand) throws InvalidCardException {
-        return hand.getCardCountBySuit(new Card(Suit.JOKER, -1));
     }
 
     public List<Card> getJokers(Hand hand) {

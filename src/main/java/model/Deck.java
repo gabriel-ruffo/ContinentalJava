@@ -2,7 +2,6 @@ package model;
 
 import exceptions.card.InvalidCardException;
 import exceptions.deck.InvalidDeckException;
-import exceptions.game.InvalidRoundException;
 import exceptions.player.InvalidPlayerException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,7 +13,7 @@ import java.util.stream.IntStream;
 
 public class Deck {
 
-    private List<Card> deck;
+    private final List<Card> deck;
     private final Logger DECK_LOGGER = LogManager.getLogger(Deck.class);
 
     public Deck() {
@@ -39,9 +38,6 @@ public class Deck {
         deck.add(new Card(Suit.JOKER, -1));
     }
 
-    public void setDeck(List<Card> deck) {
-        this.deck = deck;
-    }
 
     public void shuffle() {
         Collections.shuffle(deck);
@@ -75,21 +71,16 @@ public class Deck {
         shuffle();
     }
 
-    public void dealToPlayer(Player player, int round) throws InvalidPlayerException {
+    public void dealToPlayer(Player player, int round) throws InvalidPlayerException, InvalidDeckException {
         if (player == null) {
             throw new InvalidPlayerException("Player can't be null");
         }
 
         DECK_LOGGER.info("Dealing to " + player + " " + round + " card(s)");
 
-        IntStream.range(0, round).forEach($ ->
-        {
-            try {
-                dealCardToPlayer(player);
-            } catch (InvalidDeckException e) {
-                e.printStackTrace();
-            }
-        });
+        for (int i = 0; i < round; i++) {
+            dealCardToPlayer(player);
+        }
     }
 
     private void dealCardToPlayer(Player player) throws InvalidDeckException {
