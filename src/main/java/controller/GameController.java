@@ -37,6 +37,16 @@ public class GameController {
         dealCards(round);
     }
 
+    private void dealCards(int round) throws InvalidCardException, InvalidPlayerException, InvalidDeckException {
+        GAME_CONTROLLER_LOGGER.info("Dealing cards to players");
+        deck.reinitialize();
+
+        for (Player player : players) {
+            deck.dealToPlayer(player, round);
+            player.getHand().sortHand();
+        }
+    }
+
     public void drawCard(Player player, int round) throws InvalidPlayerException,
             InvalidDeckException, InvalidHandException, InvalidCardException {
         GAME_CONTROLLER_LOGGER.info("Deck size: " + deck.getDeck().size());
@@ -90,22 +100,17 @@ public class GameController {
         }
     }
 
-    private void setWinFlags(Player player) {
-        player.setHasWon(true);
-        discardCardHasBeenGrabbed = false;
-    }
-
-    /*
-    Tests:
-    player discard tercia possible to own downed hands
-    player discard run possible to own downed hands
-    player discard tercia possible to other player's downed hands
-    player discard run possible to other player's downed hands
-    player discard run possible to replace joker in other player's downed hands
-    player discard run possible by relocating joker in other player's downed hands
-        check weights & jokers for solution
-    player discard tercia/run possibles where player discards whole hand
-    player discard tercia/run possibles with one left over to be discarded to pile
+    /**
+     * player discard tercia possible to own downed hands
+     *     player discard run possible to own downed hands
+     *     player discard tercia possible to other player's downed hands
+     *     player discard run possible to other player's downed hands
+     *     player discard run possible to replace joker in other player's downed hands
+     *     player discard run possible by relocating joker in other player's downed hands
+     *         check weights & jokers for solution
+     *     player discard tercia/run possibles where player discards whole hand
+     *     player discard tercia/run possibles with one left over to be discarded to pile
+     * @param player Player from which to check their downed hands
      */
     private void checkDownedHands(Player player) {
         GAME_CONTROLLER_LOGGER.info("Checking downed hands");
@@ -133,6 +138,11 @@ public class GameController {
                 }
             }
         }
+    }
+
+    private void setWinFlags(Player player) {
+        player.setHasWon(true);
+        discardCardHasBeenGrabbed = false;
     }
 
     public void goDown(Player player, int round) throws InvalidCardException {
@@ -207,16 +217,6 @@ public class GameController {
         return incompleteTercias > 0 && jokerCount == incompleteTercias;
     }
 
-    private void dealCards(int round) throws InvalidCardException, InvalidPlayerException, InvalidDeckException {
-        GAME_CONTROLLER_LOGGER.info("Dealing cards to players");
-        deck.reinitialize();
-
-        for (Player player : players) {
-            deck.dealToPlayer(player, round);
-            player.getHand().sortHand();
-        }
-    }
-
     private boolean checkDiscardCardDesirability(Player player, int round) throws InvalidDeckException, InvalidPlayerException,
             InvalidHandException, InvalidCardException {
         for (Player drawPlayer : players) {
@@ -240,5 +240,4 @@ public class GameController {
             deck.dealToPlayer(player, 1);
         }
     }
-
 }

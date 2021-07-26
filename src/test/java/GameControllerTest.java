@@ -1,10 +1,9 @@
 import controller.GameController;
 import exceptions.card.InvalidCardException;
+import exceptions.deck.InvalidDeckException;
 import exceptions.hand.InvalidHandException;
-import model.Card;
-import model.Hand;
-import model.Player;
-import model.Suit;
+import exceptions.player.InvalidPlayerException;
+import model.*;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -565,6 +564,63 @@ public class GameControllerTest {
         Player player = new Player(0, problematicHand, "player");
 
         gameController.goDown(player, 6);
+    }
+
+    @Test
+    public void testDrawCard() throws InvalidPlayerException, InvalidDeckException, InvalidHandException, InvalidCardException {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(Suit.HEART, 2));
+        cards.add(new Card(Suit.HEART, 2));
+        cards.add(new Card(Suit.SPADE, 2));
+        cards.add(new Card(Suit.HEART, 3));
+        cards.add(new Card(Suit.HEART, 3));
+        cards.add(new Card(Suit.SPADE, 4));
+
+        Hand hand = new Hand(cards);
+
+        List<Player> playerList = new ArrayList<>();
+        playerList.add(new Player(0, hand, "player"));
+        GameController gameWithPlayer = new GameController(playerList);
+        gameWithPlayer.setupRound(6);
+
+        gameWithPlayer.drawCard(playerList.get(0), 6);
+        gameWithPlayer.discardCard(playerList.get(0), 6);
+        gameWithPlayer.drawCard(playerList.get(0), 6);
+    }
+
+    @Test
+    public void testDrawCardWhenDeckIsAlmostEmpty() throws InvalidPlayerException, InvalidDeckException, InvalidHandException, InvalidCardException {
+        Hand hand = new Hand();
+
+        List<Player> playerList = new ArrayList<>();
+        playerList.add(new Player(0, hand, "player"));
+        GameController gameWithPlayer = new GameController(playerList);
+
+        gameWithPlayer.setupRound(6);
+    }
+
+    @Test
+    public void testDiscardCardDiscardToEmptyHand() throws InvalidCardException, InvalidHandException {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(Suit.HEART, 1));
+        Hand hand = new Hand(cards);
+
+        List<Player> playerList = new ArrayList<>();
+        playerList.add(new Player(0, hand, "player"));
+        GameController gameWithPlayer = new GameController(playerList);
+
+        gameWithPlayer.discardCard(playerList.get(0), 6);
+    }
+
+    @Test
+    public void testDiscardCardHandAlreadyEmpty() throws InvalidCardException, InvalidHandException {
+        Hand hand = new Hand();
+
+        List<Player> playerList = new ArrayList<>();
+        playerList.add(new Player(0, hand, "player"));
+        GameController gameWithPlayer = new GameController(playerList);
+
+        gameWithPlayer.discardCard(playerList.get(0), 6);
     }
 
 //    @Test

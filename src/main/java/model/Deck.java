@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class Deck {
 
@@ -45,6 +44,9 @@ public class Deck {
 
     public Card getCard() throws InvalidDeckException {
         if (deck.isEmpty()) {
+            //TODO: reinitialize the deck if it's empty -- if during a game
+            //      however, need to populate deck only with cards not already
+            //      in play
             throw new InvalidDeckException("Deck can't be empty");
         }
 
@@ -64,8 +66,13 @@ public class Deck {
         return deck.get(0);
     }
 
+    /**
+     * Reinitialize the deck between turns. Populates the main deck with two decks,
+     * then shuffles.
+     *
+     * @throws InvalidCardException thrown when creating an invalid card
+     */
     public void reinitialize() throws InvalidCardException {
-        // deck contains 2 decks
         makeDeck();
         makeDeck();
         shuffle();
@@ -79,12 +86,8 @@ public class Deck {
         DECK_LOGGER.info("Dealing to " + player + " " + round + " card(s)");
 
         for (int i = 0; i < round; i++) {
-            dealCardToPlayer(player);
+            player.getHand().addToHand(getCard());
         }
-    }
-
-    private void dealCardToPlayer(Player player) throws InvalidDeckException {
-        player.getHand().addToHand(getCard());
     }
 
 }

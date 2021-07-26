@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 public class RunController {
     private static final Logger ERROR_LOGGER = LogManager.getLogger(RunController.class);
+
     /*
     Test:
         Ace to four
@@ -85,9 +86,10 @@ public class RunController {
         return (cardDiff == 2) && jokerCount > 0;
     }
 
-    private static boolean straightNeedsAce(int aceCount) {
-        return false;
-    }
+    // TODO: implement
+//    private static boolean straightNeedsAce(int aceCount) {
+//        return false;
+//    }
 
     private static List<Suit> getDistinctSuits(Hand hand) {
         return hand.getHand().stream().map(Card::getSuit).distinct().collect(Collectors.toList());

@@ -62,19 +62,19 @@ public class HandAnalyzer {
         }
     }
 
-    public void generateRunTypes(Hand hand) {
-        initLists();
-        List<Suit> distinctSuits = getDistinctSuits(hand);
-
-        for (Suit suit : distinctSuits) {
-            if (suit == Suit.JOKER) {
-                continue;
-            }
-            List<Card> cardsBySuit = hand.getCardCollectionBySuit(suit);
-            // maybe leverage RunController to find weights/missing cards per cardsBySuit?
-
-        }
-    }
+//    public void generateRunTypes(Hand hand) {
+//        initLists();
+//        List<Suit> distinctSuits = getDistinctSuits(hand);
+//
+//        for (Suit suit : distinctSuits) {
+//            if (suit == Suit.JOKER) {
+//                continue;
+//            }
+//            List<Card> cardsBySuit = hand.getCardCollectionBySuit(suit);
+//            // maybe leverage RunController to find weights/missing cards per cardsBySuit?
+//
+//        }
+//    }
 
     public boolean cardHelpsPlayer(Player player, Card card, int round) throws InvalidHandException, InvalidCardException {
         List<Card> playerHand = new ArrayList<>(player.getHand().getHand());

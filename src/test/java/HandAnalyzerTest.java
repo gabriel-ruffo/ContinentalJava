@@ -3,6 +3,7 @@ import exceptions.card.InvalidCardException;
 import exceptions.hand.InvalidHandException;
 import model.Card;
 import model.Hand;
+import model.Player;
 import model.Suit;
 import org.junit.Test;
 
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class HandAnalyzerTest {
 
@@ -202,5 +203,24 @@ public class HandAnalyzerTest {
         assertEquals(4, handAnalyzer.getRunPossibles().size());
         assertEquals(4, handAnalyzer.getTerciaPossibles().size());
         assertEquals(2, handAnalyzer.getFlexCards().size());
+    }
+
+    @Test
+    public void testCardHelpsPlayer() throws InvalidCardException, InvalidHandException {
+        List<Card> cards = new ArrayList<>();
+        Collections.addAll(cards,
+                new Card(Suit.HEART, 2),
+                new Card(Suit.HEART, 3),
+                new Card(Suit.HEART, 5),
+                new Card(Suit.SPADE, 2),
+                new Card(Suit.SPADE, 7));
+        Hand hand = new Hand(cards);
+        Player player = new Player(0, hand, "player");
+        HandAnalyzer handAnalyzer = new HandAnalyzer();
+
+        assertTrue(handAnalyzer.cardHelpsPlayer(player, new Card(Suit.HEART, 4), 8));
+        assertTrue(handAnalyzer.cardHelpsPlayer(player, new Card(Suit.HEART, 4), 7));
+        assertTrue(handAnalyzer.cardHelpsPlayer(player, new Card(Suit.HEART, 2), 6));
+        assertFalse(handAnalyzer.cardHelpsPlayer(player, new Card(Suit.HEART, 2), 8));
     }
 }
