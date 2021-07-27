@@ -44,9 +44,6 @@ public class Deck {
 
     public Card getCard() throws InvalidDeckException {
         if (deck.isEmpty()) {
-            //TODO: reinitialize the deck if it's empty -- if during a game
-            //      however, need to populate deck only with cards not already
-            //      in play
             throw new InvalidDeckException("Deck can't be empty");
         }
 

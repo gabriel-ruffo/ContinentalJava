@@ -589,14 +589,19 @@ public class GameControllerTest {
     }
 
     @Test
-    public void testDrawCardWhenDeckIsAlmostEmpty() throws InvalidPlayerException, InvalidDeckException, InvalidHandException, InvalidCardException {
+    public void testDrawCardCallsCheckIfDeckIsEmpty() throws InvalidPlayerException, InvalidDeckException, InvalidHandException, InvalidCardException {
         Hand hand = new Hand();
 
         List<Player> playerList = new ArrayList<>();
         playerList.add(new Player(0, hand, "player"));
         GameController gameWithPlayer = new GameController(playerList);
-
         gameWithPlayer.setupRound(6);
+
+        // draw and discard the deck until reshuffle occurs
+        for(int i = 0; i < 102; i++) {
+            gameWithPlayer.drawCard(playerList.get(0), 6);
+            gameWithPlayer.discardCard(playerList.get(0), 6);
+        }
     }
 
     @Test

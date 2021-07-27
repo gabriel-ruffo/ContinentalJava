@@ -61,6 +61,10 @@ public class GameController {
         checkIfDeckIsEmpty();
     }
 
+    /**
+     * Private method to re-make the deck once it runs out. It reshuffles the already discarded cards into
+     * the main deck object.
+     */
     private void checkIfDeckIsEmpty() {
         if (deck.getDeck().size() == 1) {
             List<Card> tempDeck = discardPile.getDeck().subList(1, discardPile.getDeck().size());
