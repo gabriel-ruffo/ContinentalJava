@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameController {
-    private final Deck deck;
+    private Deck deck;
     private Deck discardPile;
     private final List<Player> players;
     private final HandAnalyzer handAnalyzer;
@@ -251,5 +251,9 @@ public class GameController {
 
     public Deck getDiscardPile() {
         return this.discardPile;
+    }
+
+    public void setDrawPile(Deck drawPile) {
+        this.deck = drawPile;
     }
 }

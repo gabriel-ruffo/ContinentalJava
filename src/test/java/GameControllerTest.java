@@ -702,6 +702,50 @@ public class GameControllerTest {
         assertThrows(InvalidDeckException.class, () -> gameWithPlayer.getDiscardPile().getCard());
     }
 
+    @Test
+    public void testDiscardCardDesirabilityGrabbingDiscardWithPenalty() throws InvalidCardException, InvalidPlayerException, InvalidDeckException, InvalidHandException {
+        // assert other player has an extra card from discard pile
+        ArrayList<Card> terciaCards = new ArrayList<>();
+        terciaCards.add(new Card(Suit.CLUB, 2));
+        terciaCards.add(new Card(Suit.DIAMOND, 2));
+        terciaCards.add(new Card(Suit.DIAMOND, 2));
+        terciaCards.add(new Card(Suit.SPADE, 6));
+        terciaCards.add(new Card(Suit.SPADE, 6));
+        terciaCards.add(new Card(Suit.HEART, 6));
+        Hand terciaHand = new Hand(terciaCards);
+
+        ArrayList<Card> runCards = new ArrayList<>();
+        runCards.add(new Card(Suit.HEART, 2));
+        runCards.add(new Card(Suit.HEART, 3));
+        runCards.add(new Card(Suit.HEART, 4));
+        runCards.add(new Card(Suit.CLUB, 7));
+        runCards.add(new Card(Suit.CLUB, 8));
+        runCards.add(new Card(Suit.CLUB, 9));
+        Hand runHand = new Hand(runCards);
+
+        Player terciaPlayer = new Player(0, terciaHand, "TerciaPlayer");
+        Player runPlayer = new Player(0, runHand, "RunPlayer");
+
+        ArrayList<Player> players = new ArrayList<>();
+        players.add(terciaPlayer);
+        players.add(runPlayer);
+
+        GameController gameWithPlayers = new GameController(players);
+
+        Deck drawPile = new Deck();
+        drawPile.reinitialize();
+
+        Deck discardPile = new Deck();
+        discardPile.getDeck().add(new Card(Suit.CLUB, 10));
+
+        gameWithPlayers.setDiscardPile(discardPile);
+        gameWithPlayers.setDrawPile(drawPile);
+
+        assertEquals(runPlayer.getHand().getHand().size(), 6);
+        gameWithPlayers.drawCard(terciaPlayer, 8);
+        assertEquals(runPlayer.getHand().getHand().size(), 8);
+    }
+
 //    @Test
 //    public void testTwoPerfectRuns() throws InvalidCardException {
 //        ArrayList<Card> cards = new ArrayList<>();

@@ -266,4 +266,20 @@ public class HandControllerTest {
 
         assertEquals(1, discardedCard.getRank());
     }
+
+    // TODO: continue test when this part of the method is implemented
+    @Test
+    public void testDiscardWorstCardOnRunOnlyRound() throws InvalidCardException, InvalidHandException {
+        List<Card> cards = new ArrayList<>();
+        Collections.addAll(cards,
+                new Card(Suit.HEART, 1),
+                new Card(Suit.HEART, 2),
+                new Card(Suit.HEART, 3),
+                new Card(Suit.HEART, 4),
+                new Card(Suit.DIAMOND, 2),
+                new Card(Suit.DIAMOND, 3),
+                new Card(Suit.DIAMOND, 4));
+        Hand hand = new Hand(cards);
+        handController.discardWorstCard(hand, 8);
+    }
 }
