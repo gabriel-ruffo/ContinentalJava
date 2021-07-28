@@ -19,12 +19,8 @@ public class Hand {
         this.hand = hand;
     }
 
-    public boolean addToHand(Card card) {
-        if (card.validate()) {
-            hand.add(card);
-            return true;
-        }
-        return false;
+    public void addToHand(Card card) {
+        hand.add(card);
     }
 
     public boolean removeFromHand(Card card) {

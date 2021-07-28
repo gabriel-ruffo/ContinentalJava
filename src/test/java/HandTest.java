@@ -29,22 +29,9 @@ public class HandTest {
     }
 
     @Test
-    public void testHand_AddToHand() throws InvalidCardException {
-        Hand hand = new Hand();
-        assertEquals(0, hand.getHand().size());
-        assertTrue(hand.addToHand(new Card(Suit.HEART, 2)));
-        assertEquals(1, hand.getHand().size());
-
-        assertFalse(hand.addToHand(new Card(Suit.HEART, -2)));
-        assertEquals(1, hand.getHand().size());
-        assertFalse(hand.addToHand(new Card(Suit.HEART, 14)));
-        assertEquals(1, hand.getHand().size());
-    }
-
-    @Test
     public void testHand_RemoveFromHand() throws InvalidCardException {
         Hand hand = new Hand();
-        assertTrue(hand.addToHand(new Card(Suit.HEART, 2)));
+        hand.addToHand(new Card(Suit.HEART, 2));
         assertEquals(1, hand.getHand().size());
         assertTrue(hand.removeFromHand(new Card(Suit.HEART, 2)));
         assertEquals(0, hand.getHand().size());
@@ -109,10 +96,10 @@ public class HandTest {
                 new Card(Suit.CLUB, 3));
         Hand hand = new Hand(cards);
 
-        assertEquals(2, hand.getCardCountBySuit(new Card(Suit.HEART, 0)));
-        assertEquals(1, hand.getCardCountBySuit(new Card(Suit.DIAMOND, 0)));
-        assertEquals(2, hand.getCardCountBySuit(new Card(Suit.CLUB, 0)));
-        assertEquals(0, hand.getCardCountBySuit(new Card(Suit.SPADE, 0)));
+        assertEquals(2, hand.getCardCountBySuit(new Card(Suit.HEART, 1)));
+        assertEquals(1, hand.getCardCountBySuit(new Card(Suit.DIAMOND, 1)));
+        assertEquals(2, hand.getCardCountBySuit(new Card(Suit.CLUB, 1)));
+        assertEquals(0, hand.getCardCountBySuit(new Card(Suit.SPADE, 1)));
     }
 
     @Test

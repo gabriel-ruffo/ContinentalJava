@@ -36,8 +36,7 @@ public class CardTest {
         assertEquals(twoOfHearts, twoOfHearts);
         assertNotEquals(null, twoOfHearts);
 
-        Card invalid = new Card(Suit.HEART, 100);
-        assertFalse(invalid.validate());
+        assertThrows(InvalidCardException.class, () -> new Card(Suit.HEART, 100));
 
         System.out.println(twoOfHearts);
         System.out.println(joker);

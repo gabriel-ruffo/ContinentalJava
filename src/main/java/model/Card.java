@@ -16,12 +16,20 @@ public class Card {
             Logger CARD_LOGGER = LogManager.getLogger(Card.class);
             CARD_LOGGER.error("Card was attempted to be created with a null suit value.");
             throw new InvalidCardException("Suit can't be null.");
+        } else {
+            this.suit = suit;
         }
-        this.suit = suit;
-        this.rank = rank;
+
+        if (!validate(rank)) {
+            Logger CARD_LOGGER = LogManager.getLogger(Card.class);
+            CARD_LOGGER.error("Card was attempted to be created with an invalid rank value.");
+            throw new InvalidCardException("Rank must be between 1, 13, and -1 for Jokers.");
+        } else {
+            this.rank = rank;
+        }
     }
 
-    public boolean validate() {
+    private boolean validate(int rank) {
         return rank >= -1 && rank <= 13 && rank != 0;
     }
 
