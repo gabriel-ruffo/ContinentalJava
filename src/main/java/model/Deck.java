@@ -23,6 +23,10 @@ public class Deck {
         return deck;
     }
 
+    /**
+     * Creates one full deck with two jokers.
+     * @throws InvalidCardException Thrown if a card is made with a null suit or invalid rank
+     */
     public void makeDeck() throws InvalidCardException {
         for (Suit suit : Suit.values()) {
             if (suit.equals(Suit.JOKER)) {
@@ -37,11 +41,15 @@ public class Deck {
         deck.add(new Card(Suit.JOKER, -1));
     }
 
-
     public void shuffle() {
         Collections.shuffle(deck);
     }
 
+    /**
+     * Delete and return the next card in the deck.
+     * @return the next card in queue
+     * @throws InvalidDeckException Thrown if trying to remove a card from an empty deck
+     */
     public Card getCard() throws InvalidDeckException {
         if (deck.isEmpty()) {
             throw new InvalidDeckException("Deck can't be empty");
@@ -75,6 +83,13 @@ public class Deck {
         shuffle();
     }
 
+    /**
+     * Deal's number of cards equal to given round to the given player.
+     * @param player Player to be dealt cards
+     * @param round Number of cards to be dealt
+     * @throws InvalidPlayerException Thrown if player is null
+     * @throws InvalidDeckException Thrown if deck is empty
+     */
     public void dealToPlayer(Player player, int round) throws InvalidPlayerException, InvalidDeckException {
         if (player == null) {
             throw new InvalidPlayerException("Player can't be null");
