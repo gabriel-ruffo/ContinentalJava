@@ -3,6 +3,7 @@ import exceptions.card.InvalidCardException;
 import exceptions.deck.InvalidDeckException;
 import exceptions.hand.InvalidHandException;
 import exceptions.player.InvalidPlayerException;
+import exceptions.points.InvalidPointsException;
 import model.*;
 import org.junit.Test;
 
@@ -15,7 +16,7 @@ public class GameControllerTest {
     private final GameController gameController = new GameController(null);
 
     @Test
-    public void test_FirstHandSuccessful() throws InvalidCardException {
+    public void test_FirstHandSuccessfulAndUnsuccessful() throws InvalidCardException {
         ArrayList<Card> cards = new ArrayList<>();
         cards.add(new Card(Suit.HEART, 2));
         cards.add(new Card(Suit.HEART, 2));
@@ -28,6 +29,7 @@ public class GameControllerTest {
         Player player= new Player(0, twoTercias, "");
 
         assertTrue(gameController.canGoDown(player, 6));
+        assertFalse(gameController.canGoDown(player, 7));
     }
 
     @Test
@@ -626,6 +628,78 @@ public class GameControllerTest {
         GameController gameWithPlayer = new GameController(playerList);
 
         gameWithPlayer.discardCard(playerList.get(0), 6);
+    }
+
+    @Test
+    public void testCalculatePlayerPoints() throws InvalidPointsException, InvalidCardException {
+        Player player1 = new Player(0, new Hand(), "player1");
+        Player player2 = new Player(0, new Hand(), "player2");
+
+        List<Player> players = new ArrayList<>();
+        players.add(player1);
+        players.add(player2);
+
+        GameController gameWithPlayers = new GameController(players);
+
+        gameWithPlayers.calculatePlayersPoints();
+
+        assertEquals(0, player1.getPoints());
+        assertEquals(0, player2.getPoints());
+
+        player1.getHand().addToHand(new Card(Suit.CLUB, 10));
+        player1.getHand().addToHand(new Card(Suit.CLUB, 10));
+        player1.getHand().addToHand(new Card(Suit.CLUB, 10));
+
+        player2.getHand().addToHand(new Card(Suit.CLUB, 5));
+        player2.getHand().addToHand(new Card(Suit.CLUB, 5));
+        player2.getHand().addToHand(new Card(Suit.CLUB, 5));
+
+        gameWithPlayers.calculatePlayersPoints();
+
+        assertEquals(30, player1.getPoints());
+        assertEquals(15, player2.getPoints());
+    }
+
+    @Test
+    public void testCheckDiscardCardDesirability() throws InvalidDeckException, InvalidPlayerException, InvalidCardException, InvalidHandException {
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(Suit.HEART, 2));
+        cards.add(new Card(Suit.HEART, 2));
+        cards.add(new Card(Suit.HEART, 3));
+        cards.add(new Card(Suit.HEART, 3));
+        cards.add(new Card(Suit.SPADE, 4));
+
+        Hand hand = new Hand(cards);
+        Player player = new Player(0, hand, "player");
+
+        ArrayList<Card> otherCards = new ArrayList<>();
+        otherCards.add(new Card(Suit.HEART, 2));
+        otherCards.add(new Card(Suit.HEART, 2));
+        otherCards.add(new Card(Suit.HEART, 3));
+        otherCards.add(new Card(Suit.SPADE, 4));
+        otherCards.add(new Card(Suit.SPADE, 4));
+
+        Hand otherHand = new Hand(otherCards);
+        Player otherPlayer = new Player(0, otherHand, "otherPlayer");
+
+        List<Player> playerList = new ArrayList<>();
+        playerList.add(player);
+        playerList.add(otherPlayer);
+        GameController gameWithPlayer = new GameController(playerList);
+
+        Deck discardPile = new Deck();
+        discardPile.getDeck().add(new Card(Suit.SPADE, 2));
+
+        gameWithPlayer.setDiscardPile(discardPile);
+
+        // will draw from the discard pile
+        gameWithPlayer.drawCard(player, 6);
+        // will discard a 4 of spades
+        gameWithPlayer.discardCard(player, 6);
+        // will pick up the 4 from the discard pile
+        gameWithPlayer.drawCard(otherPlayer, 6);
+
+        assertThrows(InvalidDeckException.class, () -> gameWithPlayer.getDiscardPile().getCard());
     }
 
 //    @Test

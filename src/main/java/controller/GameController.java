@@ -17,7 +17,7 @@ import java.util.List;
 
 public class GameController {
     private final Deck deck;
-    private final Deck discardPile;
+    private Deck discardPile;
     private final List<Player> players;
     private final HandAnalyzer handAnalyzer;
 
@@ -243,5 +243,13 @@ public class GameController {
             // give normal card to current turn player
             deck.dealToPlayer(player, 1);
         }
+    }
+
+    public void setDiscardPile(Deck discardPile) {
+        this.discardPile = discardPile;
+    }
+
+    public Deck getDiscardPile() {
+        return this.discardPile;
     }
 }
