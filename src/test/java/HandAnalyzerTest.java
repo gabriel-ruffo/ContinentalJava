@@ -223,4 +223,22 @@ public class HandAnalyzerTest {
         assertTrue(handAnalyzer.cardHelpsPlayer(player, new Card(Suit.HEART, 2), 6));
         assertFalse(handAnalyzer.cardHelpsPlayer(player, new Card(Suit.HEART, 2), 8));
     }
+
+    @Test
+    public void testGenerateRunTypes() throws InvalidCardException {
+        List<Card> cards = new ArrayList<>();
+        Collections.addAll(cards,
+                new Card(Suit.HEART, 2),
+                new Card(Suit.HEART, 3),
+                new Card(Suit.HEART, 4),
+                new Card(Suit.HEART, 5));
+        Hand hand = new Hand(cards);
+        HandAnalyzer handAnalyzer = new HandAnalyzer();
+
+        assertEquals(handAnalyzer.getPerfectRuns().size(), 0);
+
+        handAnalyzer.generateRunTypes(hand);
+
+        assertEquals(handAnalyzer.getPerfectRuns().size(), 1);
+    }
 }

@@ -17,19 +17,28 @@ public class HandAnalyzer {
     private List<Card> terciaPossibles;
     private List<Card> runPossibles;
     private List<Card> flexCards;
-    private List<List<Card>> perfectTercias;
+
     private List<List<Card>> incompleteTercias;
+    private List<List<Card>> perfectTercias;
     private List<List<Card>> overflowTercias;
+
+    private List<List<Card>> incompleteRuns;
+    private List<List<Card>> perfectRuns;
+    private List<List<Card>> overflowRuns;
 
     private int jokerCount;
     private int round;
+
+    public HandAnalyzer() {
+        initAllLists();
+    }
 
     public void generateHandComponents(Hand hand, int round) throws InvalidHandException, InvalidCardException {
         if (hand == null) {
             throw new InvalidHandException("Hand can't be null");
         }
         this.round = round;
-        initLists();
+        initAllLists();
         jokerCount = hand.getJokerCount();
 
         if (roundNeedsOnlyTercias(round)) {
@@ -44,7 +53,7 @@ public class HandAnalyzer {
     }
 
     public void generateTerciaTypes(Hand hand) {
-        initLists();
+        initTerciaLists();
         List<Integer> distinctRanks = getDistinctRanks(hand);
 
         for (int rank : distinctRanks) {
@@ -62,19 +71,40 @@ public class HandAnalyzer {
         }
     }
 
-//    public void generateRunTypes(Hand hand) {
-//        initLists();
-//        List<Suit> distinctSuits = getDistinctSuits(hand);
-//
-//        for (Suit suit : distinctSuits) {
-//            if (suit == Suit.JOKER) {
-//                continue;
-//            }
-//            List<Card> cardsBySuit = hand.getCardCollectionBySuit(suit);
-//            // maybe leverage RunController to find weights/missing cards per cardsBySuit?
-//
-//        }
-//    }
+    public void generateRunTypes(Hand hand) {
+        initRunLists();
+        List<Suit> distinctSuits = getDistinctSuits(hand);
+
+        // for each distinct suit in hand
+        for (Suit suit : distinctSuits) {
+            if (suit == Suit.JOKER) {
+                continue;
+            }
+            // get all cards in current suit
+            List<Card> cardsBySuit = hand.getCardCollectionBySuit(suit);
+
+        }
+    }
+
+    private void initTerciaLists() {
+        incompleteTercias = new ArrayList<>();
+        perfectTercias = new ArrayList<>();
+        overflowTercias = new ArrayList<>();
+    }
+
+    private void initRunLists() {
+        incompleteRuns = new ArrayList<>();
+        perfectRuns = new ArrayList<>();
+        overflowRuns = new ArrayList<>();
+    }
+
+    private void initAllLists() {
+        initTerciaLists();
+        initRunLists();
+        terciaPossibles = new ArrayList<>();
+        runPossibles = new ArrayList<>();
+        flexCards = new ArrayList<>();
+    }
 
     public boolean cardHelpsPlayer(Player player, Card card, int round) throws InvalidHandException, InvalidCardException {
         List<Card> playerHand = new ArrayList<>(player.getHand().getHand());
@@ -103,15 +133,6 @@ public class HandAnalyzer {
 
     public boolean roundNeedsOnlyRuns(int round) {
         return round == 8 || round == 13;
-    }
-
-    private void initLists() {
-        terciaPossibles = new ArrayList<>();
-        runPossibles = new ArrayList<>();
-        flexCards = new ArrayList<>();
-        perfectTercias = new ArrayList<>();
-        incompleteTercias = new ArrayList<>();
-        overflowTercias = new ArrayList<>();
     }
 
     private void generateTerciaComponent(Hand hand) {
@@ -183,7 +204,7 @@ public class HandAnalyzer {
 
     public List<Card> getJokers(Hand hand) {
         List<Card> jokers = new ArrayList<>();
-        for (Card card: hand.getHand()) {
+        for (Card card : hand.getHand()) {
             if (card.getSuit() == Suit.JOKER) {
                 jokers.add(card);
             }
@@ -220,15 +241,27 @@ public class HandAnalyzer {
         return flexCards;
     }
 
-    public List<List<Card>> getPerfectTercias() {
-        return perfectTercias;
-    }
-
     public List<List<Card>> getIncompleteTercias() {
         return incompleteTercias;
     }
 
+    public List<List<Card>> getPerfectTercias() {
+        return perfectTercias;
+    }
+
     public List<List<Card>> getOverflowTercias() {
         return overflowTercias;
+    }
+
+    public List<List<Card>> getIncompleteRuns() {
+        return incompleteRuns;
+    }
+
+    public List<List<Card>> getPerfectRuns() {
+        return perfectRuns;
+    }
+
+    public List<List<Card>> getOverflowRuns() {
+        return overflowRuns;
     }
 }
