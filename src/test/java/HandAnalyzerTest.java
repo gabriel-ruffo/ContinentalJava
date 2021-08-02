@@ -225,13 +225,17 @@ public class HandAnalyzerTest {
     }
 
     @Test
-    public void testGenerateRunTypes() throws InvalidCardException {
+    public void testGenerateRunTypesPerfectNoJoker() throws InvalidCardException {
         List<Card> cards = new ArrayList<>();
         Collections.addAll(cards,
                 new Card(Suit.HEART, 2),
                 new Card(Suit.HEART, 3),
                 new Card(Suit.HEART, 4),
-                new Card(Suit.HEART, 5));
+                new Card(Suit.HEART, 5),
+                new Card(Suit.DIAMOND, 10),
+                new Card(Suit.DIAMOND, 11),
+                new Card(Suit.DIAMOND, 12),
+                new Card(Suit.DIAMOND, 13));
         Hand hand = new Hand(cards);
         HandAnalyzer handAnalyzer = new HandAnalyzer();
 
@@ -239,6 +243,28 @@ public class HandAnalyzerTest {
 
         handAnalyzer.generateRunTypes(hand);
 
-        assertEquals(handAnalyzer.getPerfectRuns().size(), 1);
+        assertEquals(handAnalyzer.getPerfectRuns().size(), 2);
+    }
+
+    @Test
+    public void testGenerateRunTypesPerfectRoyalNoJoker() throws InvalidCardException {
+        List<Card> cards = new ArrayList<>();
+        Collections.addAll(cards,
+                new Card(Suit.HEART, 1),
+                new Card(Suit.HEART, 2),
+                new Card(Suit.HEART, 3),
+                new Card(Suit.HEART, 4),
+                new Card(Suit.DIAMOND, 1),
+                new Card(Suit.DIAMOND, 11),
+                new Card(Suit.DIAMOND, 12),
+                new Card(Suit.DIAMOND, 13));
+        Hand hand = new Hand(cards);
+        HandAnalyzer handAnalyzer = new HandAnalyzer();
+
+        assertEquals(handAnalyzer.getPerfectRuns().size(), 0);
+
+        handAnalyzer.generateRunTypes(hand);
+
+        assertEquals(handAnalyzer.getPerfectRuns().size(), 2);
     }
 }

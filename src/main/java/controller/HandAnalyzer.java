@@ -83,7 +83,60 @@ public class HandAnalyzer {
             // get all cards in current suit
             List<Card> cardsBySuit = hand.getCardCollectionBySuit(suit);
 
+            processPerfectRuns(cardsBySuit);
         }
+    }
+
+    private void processPerfectRuns(List<Card> cardsBySuit) {
+        // initial card from sorted hand
+        int cardRankPointer = cardsBySuit.get(0).getRank();
+        int cardDiff = 0;
+        int diffCount = 1;
+
+        for (Card card : cardsBySuit) {
+            cardDiff = card.getRank() - cardRankPointer;
+            if (cardDiff == 1) {
+                diffCount++;
+            }
+            cardRankPointer = card.getRank();
+        }
+
+        if (perfectHighRoyalRunCheck(cardDiff, diffCount, cardsBySuit)) {
+            perfectRuns.add(cardsBySuit);
+        } else if (perfectRunCheck(diffCount, cardsBySuit.size())) {
+            perfectRuns.add(cardsBySuit);
+        }
+    }
+
+    /**
+     *
+     * @param cardDiff Difference between last and current card
+     * @param diffCount Total difference in ranks
+     * @param cardsBySuit Cards by suit
+     * @return Whether params pass size checks
+     */
+    private boolean perfectHighRoyalRunCheck(int cardDiff, int diffCount, List<Card> cardsBySuit) {
+        return cardsBySuit.size() == 4 &&
+                diffCount == cardsBySuit.size() - 1 &&
+                runNeedsAce(diffCount, cardsBySuit);
+    }
+
+    private boolean runNeedsAce(int diffCount, List<Card> cardsBySuit) {
+        return diffCount < 4 && cardsBySuit.stream()
+                .map(Card::getRank)
+                .collect(Collectors.toList())
+                .contains(1);
+    }
+
+    /**
+     * If the difference in ranks is equal to the size of the hand (4)
+     * then it must be a perfect run.
+     * @param diffCount Total difference in ranks
+     * @param cardsBySuitSize Number of cards by suit
+     * @return Whether params pass size checks
+     */
+    private boolean perfectRunCheck(int diffCount, int cardsBySuitSize) {
+        return diffCount == cardsBySuitSize && cardsBySuitSize == 4;
     }
 
     private void initTerciaLists() {
