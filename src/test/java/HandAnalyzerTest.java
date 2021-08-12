@@ -15,6 +15,12 @@ import static org.junit.Assert.*;
 
 public class HandAnalyzerTest {
 
+    /*
+    TODO: Tests to write:
+        1. One big hand of same suit with multiple run types
+        2. Overflow run with duplicate cards
+     */
+
     @Test(expected = InvalidHandException.class)
     public void testNullHand() throws InvalidHandException, InvalidCardException {
         HandAnalyzer handAnalyzer = new HandAnalyzer();
@@ -240,9 +246,7 @@ public class HandAnalyzerTest {
         HandAnalyzer handAnalyzer = new HandAnalyzer();
 
         assertEquals(handAnalyzer.getPerfectRuns().size(), 0);
-
         handAnalyzer.generateRunTypes(hand);
-
         assertEquals(handAnalyzer.getPerfectRuns().size(), 2);
     }
 
@@ -262,9 +266,43 @@ public class HandAnalyzerTest {
         HandAnalyzer handAnalyzer = new HandAnalyzer();
 
         assertEquals(handAnalyzer.getPerfectRuns().size(), 0);
-
         handAnalyzer.generateRunTypes(hand);
-
         assertEquals(handAnalyzer.getPerfectRuns().size(), 2);
+    }
+
+    @Test
+    public void testGenerateRunTypesTwoPerfectRunsOneSuit() throws InvalidCardException {
+        List<Card> cards = new ArrayList<>();
+        Collections.addAll(cards,
+                new Card(Suit.HEART, 1),
+                new Card(Suit.HEART, 2),
+                new Card(Suit.HEART, 3),
+                new Card(Suit.HEART, 4),
+                new Card(Suit.HEART, 8),
+                new Card(Suit.HEART, 9),
+                new Card(Suit.HEART, 10),
+                new Card(Suit.HEART, 11));
+        Hand hand = new Hand(cards);
+        HandAnalyzer handAnalyzer = new HandAnalyzer();
+
+        assertEquals(handAnalyzer.getPerfectRuns().size(), 0);
+        handAnalyzer.generateRunTypes(hand);
+        assertEquals(handAnalyzer.getPerfectRuns().size(), 2);
+    }
+
+    @Test
+    public void testGenerateRunTypesIncomplete() throws InvalidCardException {
+        List<Card> cards = new ArrayList<>();
+        Collections.addAll(cards,
+                new Card(Suit.CLUB, 2),
+                new Card(Suit.CLUB, 3),
+                new Card(Suit.CLUB, 4),
+                new Card(Suit.CLUB, 7));
+        Hand hand = new Hand(cards);
+        HandAnalyzer handAnalyzer = new HandAnalyzer();
+
+        assertEquals(handAnalyzer.getIncompleteRuns().size(), 0);
+        handAnalyzer.generateRunTypes(hand);
+        assertEquals(handAnalyzer.getIncompleteRuns().size(), 1);
     }
 }
